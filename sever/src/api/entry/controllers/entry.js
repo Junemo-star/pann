@@ -6,4 +6,9 @@
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController('api::entry.entry');
+module.exports = createCoreController('api::entry.entry', ({ strapi }) => ({
+    async find(ctx) {
+        //only used by student
+        return await super.find(ctx)
+    },
+}));
