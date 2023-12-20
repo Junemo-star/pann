@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "entries",
+  "info": {
+    "singularName": "entry",
+    "pluralName": "entries",
+    "displayName": "entry"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "result": {
+      "type": "string"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "entries"
+    },
+    "event": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::event.event",
+      "inversedBy": "entries"
+    },
+    "seedata": {
+      "type": "date"
+    }
+  }
+}
