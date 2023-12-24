@@ -30,6 +30,10 @@ const LoginForm = () => {
             })
             axiosConfig.jwt = result.data.jwt
 
+            //เซ็ต headers เป็น token ตลอดเวลา แต่ตอน refresh token จะหาย
+            const token = result.data.jwt
+            axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
+
             result = await axios.get('http://localhost:1337/api/users/me?populate=role')
             if(result.data.role){
                 if(result.data.role.name == 'student'){

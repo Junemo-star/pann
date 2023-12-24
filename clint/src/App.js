@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Login from './component/Login';
 
 function App() {
-  //const clickme = () => console.log('Hello world')
 
   return (
     <div>
