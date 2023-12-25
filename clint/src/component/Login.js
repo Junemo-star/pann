@@ -1,5 +1,5 @@
 // SimpleLoginForm.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import axiosConfig from './axios-interceptor';
@@ -28,18 +28,27 @@ const LoginForm = () => {
                 identifier: username,
                 password: password
             })
+
+            //เก็บ jwt ในฟังก์ชั่นเพื่อเรียกใช้งานในหน้า component อื่น
+            const saveTokenToLocalStorage = (token) => {
+                localStorage.setItem('jwtToken', token);
+            };
+            saveTokenToLocalStorage(result.data.jwt)
+
             axiosConfig.jwt = result.data.jwt
 
-            //เซ็ต headers เป็น token ตลอดเวลา แต่ตอน refresh token จะหาย
-            const token = result.data.jwt
-            axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
-
+            //เช็ค role
             result = await axios.get('http://localhost:1337/api/users/me?populate=role')
+            
             if(result.data.role){
                 if(result.data.role.name == 'student'){
                     navigate('/student');
                 }
+                if(result.data.role.name == 'stuff'){
+                    navigate('/stuff');
+                }
             }
+            
             console.log(result)
 
         } catch (e) {
@@ -80,5 +89,5 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default LoginForm
 

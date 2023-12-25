@@ -4,11 +4,19 @@ import { useState, useEffect } from "react";
 function StudentPage() {
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
-
-  //เรียกข้อมูลจาก Strapi ผ่าน API โดยใช้ axios.defaults.headers.common ที่ Login
-  //แก้บัค refresh หน้าจอแล้ว Token หาย **************************************************************
+  
   useEffect(() => {
-    axios.get("http://localhost:1337/api/events")
+
+    //เก็บข้อมูล jwt ที่ได้จากการ login
+    const config = {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+      // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
+    },
+    };
+
+    //เรียกข้อมูล
+    axios.get("http://localhost:1337/api/events", config)
       .then(({ data }) => setData(data.data))
       .catch((error) => setError(error));
   }, []);
@@ -21,6 +29,7 @@ function StudentPage() {
 
   return (
     <div>
+      <h1>ประกาศคะแนน</h1>
       <ul>
         {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
           <li key={id}>{attributes.name}</li>

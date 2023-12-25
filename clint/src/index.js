@@ -5,16 +5,23 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {createBrowserRouter,RouterProvider,} from "react-router-dom";
-import StudentPage from './component/Studentpage';
+import StudentPage from './component/page/Studentpage';
+import Stuffpage from './component/page/Stuffpage';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App/>,
   },
+
   {
     path: "/student",
     element: <StudentPage/>,
+  },
+  
+  {
+    path: "/stuff",
+    element: <Stuffpage />,
   }
 ]);
 
