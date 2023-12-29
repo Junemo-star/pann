@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Stack from 'react-bootstrap/Stack';    //เอาไว้ตกแต่ง
+import { useNavigate } from 'react-router-dom';
 
 function StudentPage() {
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
+  const navigate = useNavigate()      //N a v i g a t e 
 
   useEffect(() => {
 
@@ -26,11 +29,17 @@ function StudentPage() {
     return <div>An error occured: {error.message}</div>;
   }
 
-  const check_data_user = (id) =>{
+  const check_data_user = (id) =>{        //เมื่อกดหัวข้อคะแนนจะทำการแสดงรายระเอียดคะแนนของเราในหัวข้อนั้นๆ
     const dataid = data.find(entry => entry.id === id)   //นำไอดีที่ได้ไปหาใน Arrey 
     console.log(dataid)
+
+    try{
+      navigate('/student/show')
+    }catch (e) {
+      console.log(e)
+    }
   }
- 
+
   return (
     <div>
       <h1>ประกาศคะแนน</h1>

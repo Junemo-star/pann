@@ -368,13 +368,14 @@ export interface ApiEntryEntry extends Schema.CollectionType {
     singularName: 'entry';
     pluralName: 'entries';
     displayName: 'entry';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
     result: Attribute.String;
-    users_permissions_user: Attribute.Relation<
+    owner: Attribute.Relation<
       'api::entry.entry',
       'manyToOne',
       'plugin::users-permissions.user'

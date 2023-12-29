@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {createBrowserRouter,RouterProvider,} from "react-router-dom";
 import StudentPage from './component/page/Studentpage';
 import Stuffpage from './component/page/Stuffpage';
+import Showinfo from './component/page/showstudent';
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,13 @@ const router = createBrowserRouter([
   {
     path: "/stuff",
     element: <Stuffpage />,
-  }
+  },
+
+  {
+    path: "/student/show",
+    element: <Showinfo/>,
+  },
+
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -30,6 +37,7 @@ root.render(
   <React.StrictMode>
      <RouterProvider router={router} />
   </React.StrictMode>
+  
 );
 
 // If you want to start measuring performance in your app, pass a function

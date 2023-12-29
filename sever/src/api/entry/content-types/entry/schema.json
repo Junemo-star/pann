@@ -4,7 +4,8 @@
   "info": {
     "singularName": "entry",
     "pluralName": "entries",
-    "displayName": "entry"
+    "displayName": "entry",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -14,7 +15,7 @@
     "result": {
       "type": "string"
     },
-    "users_permissions_user": {
+    "owner": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
