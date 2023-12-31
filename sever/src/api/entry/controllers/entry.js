@@ -7,8 +7,22 @@
 const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::entry.entry', ({ strapi }) => ({
-    async find(ctx) {
-        //only used by student
-        return await super.find(ctx)
+
+    async listEntries(ctx) {
+        const entityId = ctx.params.id;
+        try {
+            ctx.body = { ok: 1 };
+        } catch (err) {
+            ctx.body = err;
+        }
     },
+
+    async postEntries(ctx) {
+        const entityId = ctx.params.id;
+        try {
+            ctx.body = { ok: 1 };
+        } catch (err) {
+            ctx.body = err;
+        }
+    }
 }));

@@ -8,22 +8,14 @@ const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::event.event', ({ strapi }) => ({
 
-    async listEntries(ctx) {
-        const entityId = ctx.params.id;
-        try {
-            ctx.body = { ok: 1 };
-        } catch (err) {
-            ctx.body = err;
-        }
+    async findinfo(ctx) {
+        const {id} = ctx.params
+        console.log(id)
+        //only used by student
+        return await super.find(ctx)
     },
+    
 
-    async postEntries(ctx) {
-        const entityId = ctx.params.id;
-        try {
-            ctx.body = { ok: 1 };
-        } catch (err) {
-            ctx.body = err;
-        }
-    }
+
 
 }));
