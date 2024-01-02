@@ -20,7 +20,7 @@ function StudentPage() {
 
     //เรียกข้อมูล
     axios.get("http://localhost:1337/api/events", config)
-      .then(({ data }) => setData(data.data))
+    .then(({ data }) => setData(data.data))
       .catch((error) => setError(error));
   }, []);
 
@@ -32,7 +32,6 @@ function StudentPage() {
   const check_data_user = (id) =>{        //เมื่อกดหัวข้อคะแนนจะทำการแสดงรายระเอียดคะแนนของเราในหัวข้อนั้นๆ
     const dataid = data.find(entry => entry.id === id)   //นำไอดีที่ได้ไปหาใน Arrey 
     console.log(dataid)
-
     try{
       navigate('/student/show')
     }catch (e) {

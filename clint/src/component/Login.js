@@ -32,8 +32,11 @@ const LoginForm = () => {
             //เก็บ jwt ในฟังก์ชั่นเพื่อเรียกใช้งานในหน้า component อื่น
             const saveTokenToLocalStorage = (token) => {
                 localStorage.setItem('jwtToken', token);
-            };
+            }
             saveTokenToLocalStorage(result.data.jwt)
+            axios.defaults.headers.common = {
+                Authorization : `Bearer &{result.data.jwt}`
+            }
 
             axiosConfig.jwt = result.data.jwt
 
