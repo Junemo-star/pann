@@ -5,9 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {createBrowserRouter,RouterProvider,} from "react-router-dom";
-import StudentPage from './component/page/Studentpage';
-import Stuffpage from './component/page/Stuffpage';
-import Showinfo from './component/page/showstudent';
+import StudentPage from './page/Studentpage';
+import Stuffpage from './page/Stuffpage';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Showinfo from './page/Show';
+import Showpoint from './page/Show-point';
 
 const router = createBrowserRouter([
   {
@@ -17,7 +19,7 @@ const router = createBrowserRouter([
 
   {
     path: "/student",
-    element: <StudentPage/>,
+    element: <StudentPage />,
   },
   
   {
@@ -26,9 +28,14 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/student/show",
+    path: "/student/:courseName",
     element: <Showinfo/>,
   },
+
+  {
+    path: "/student/:courseName/:entry",
+    element: <Showpoint/>
+  }
 
 ]);
 

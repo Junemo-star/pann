@@ -3,13 +3,12 @@ import { useState, useEffect } from "react";
 import Stack from 'react-bootstrap/Stack';    //เอาไว้ตกแต่ง
 import { useNavigate } from 'react-router-dom';
 
-function StudentPage() {
+function StudentSort() {   //ชื่อฟังก์ชั่นควรเป็นตัวใหญ่
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
   const navigate = useNavigate()      //N a v i g a t e 
 
   useEffect(() => {
-
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
       headers: {
@@ -19,7 +18,7 @@ function StudentPage() {
     };
 
     //เรียกข้อมูล
-    axios.get("http://localhost:1337/api/events", config)
+    axios.get("http://localhost:1337/api/courses", config)
     .then(({ data }) => setData(data.data))
       .catch((error) => setError(error));
   }, []);
@@ -29,11 +28,9 @@ function StudentPage() {
     return <div>An error occured: {error.message}</div>;
   }
 
-  const check_data_user = (id) =>{        //เมื่อกดหัวข้อคะแนนจะทำการแสดงรายระเอียดคะแนนของเราในหัวข้อนั้นๆ
-    const dataid = data.find(entry => entry.id === id)   //นำไอดีที่ได้ไปหาใน Arrey 
-    console.log(dataid)
+  const check_data_user = (subject) =>{        //เมื่อกดหัวข้อคะแนนจะทำการแสดงรายระเอียดคะแนนของเราในหัวข้อนั้นๆ
     try{
-      navigate('/student/show')
+      navigate(`/student/${subject}`)
     }catch (e) {
       console.log(e)
     }
@@ -44,12 +41,14 @@ function StudentPage() {
       <h1>ประกาศคะแนน</h1>
       <ul>
           {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
-            <button key={id} onClick={() => check_data_user(id)}>{attributes.name}</button> //แก้วิชาให้เป็นปุ่มเพื่อจะกดดูข้อมูลด้านใน
+            <button key={id} onClick={() => check_data_user(attributes.subject)}>
+              {attributes.subject}
+            </button>
           ))}
       </ul>
     </div>
   );
 }
 
-export default StudentPage;
+export default StudentSort;
 

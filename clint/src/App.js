@@ -1,13 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
 import Button from 'react-bootstrap/Button';
-import Login from './component/Login';
+import LoginForm from './page/Login';
 
 function App() {
 
   return (
     <div>
-      <Login />
+      <LoginForm />
     </div>
   );
 }

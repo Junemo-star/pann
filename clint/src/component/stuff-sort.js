@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-function Stuffpage() {
+function StuffpageSort() {
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
   
@@ -41,5 +41,5 @@ function Stuffpage() {
   );
 }
 
-export default Stuffpage;
+export default StuffpageSort;
 
