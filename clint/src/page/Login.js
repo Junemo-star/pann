@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import axios from 'axios';
-import axiosConfig from '../component/axios-interceptor';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -11,7 +10,6 @@ const LoginForm = () => {
     const [username, setUsername] = useState("223");
     const [password, setPassword] = useState("123456");
     const [submitEnabled, setSubmitEnabled] = useState(true);
-
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -36,15 +34,15 @@ const LoginForm = () => {
                 localStorage.setItem('jwtToken', token);        //เก็บ jwt token
             }
             localStorage.setItem('usern', username);           //เก็บชื่อ username
-            saveTokenToLocalStorage(result.data.jwt)
-            axios.defaults.headers.common = {
-                Authorization: `Bearer &{result.data.jwt}`
-            }
-
-            axiosConfig.jwt = result.data.jwt
-
+            
+            const config = {
+                headers: {
+                  'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+                },
+            };
+            
             //เช็ค role
-            result = await axios.get('http://localhost:1337/api/users/me?populate=role')
+            result = await axios.get('http://localhost:1337/api/users/me?populate=role', config)
 
             if (result.data.role) {
                 if (result.data.role.name == 'student') {

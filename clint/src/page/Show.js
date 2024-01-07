@@ -23,6 +23,10 @@ const Showinfo = () => {
   const [config, setConfig] = useState()
   const [des, setDes] = useState()
 
+  const handleGoBack = () => {
+    navigate('/student');
+  };
+
   useEffect(() => {
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
@@ -40,59 +44,38 @@ const Showinfo = () => {
 
   const showpoint = (entryname) => {
     try {
-      //navigate(`/student/${subject}/${entryname}`)
       setDes(entryname)
       setModalShow(true)
-      console.log(courseName)
     } catch (e) {
       console.log(e)
     }
   }
 
-  /* const showpoint = (item) => {
-    setModalShow(true)
-    //เรียกข้อมูลคะแนนทั้งหมด
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
-      courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${item}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
-          // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
-        },
-      }) 
-      .then(({ datapoint }) => setDatapoint(data.data))
-      .catch((error2) => setError2(error));
-    
-      //ฟิลเตอ data point ที่ต้องการ
-    const filteredData = datapoint.filter(item =>
-      item.attributes.course.data !== null &&
-      item.attributes.event.data !== null &&
-      item.attributes.owner.data !== null
-    );
-  } */
-
-
-
   return (
     <div>
-      <div>
+      <div class="head">
+        ประกาศคะแนน
+      </div>
+      <div className="cards-container">
         {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
-          <Card
-            style={{
-              height: 'auto',
-            }}>
+          <Card key={id} className="item">
             <Card.Body>
               <Card.Title>
-                <div key={id}>
-                  {attributes.name}
-                </div>
-                <div style={{ margin: '10px' }}>
-                  <button onClick={() => showpoint(attributes.name)}>View</button>
-                </div>
+                  <div>
+                    {attributes.name}
+                  </div>
+                  <div style={{ margin: '10px' }}>
+                    <button onClick={() => showpoint(attributes.name)}>View</button>
+                  </div>
               </Card.Title>
             </Card.Body>
           </Card>
         ))}
 
+        <div className="backposition">
+          <button onClick={handleGoBack}>Go back</button>
+        </div>
+ 
         <MyVerticallyCenteredModal
           show={modalShow}
           onHide={() => setModalShow(false)}
@@ -113,16 +96,15 @@ function MyVerticallyCenteredModal(props) {
     const storedData = localStorage.getItem('myData');
     return storedData ? JSON.parse(storedData) : [];
   });
-  
+
   useEffect(() => {
     const config = {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
       },
     };
-  
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
-      courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
+
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
       .then(({ data }) => {
         const filteredData = data.data.filter(item =>
           item.attributes.course.data !== null &&
@@ -130,7 +112,7 @@ function MyVerticallyCenteredModal(props) {
           item.attributes.owner.data !== null
         );
         setData(filteredData);
-  
+
         // บันทึกข้อมูลใน localStorage
         localStorage.setItem('myData', JSON.stringify(filteredData));
       })
@@ -152,7 +134,7 @@ function MyVerticallyCenteredModal(props) {
 
       <Modal.Body>
         <h4>{entry}</h4>
-        {data.map(({id,attributes}) => (
+        {data.map(({ id, attributes }) => (
           <p key={id}>
             <h5>{attributes.result}</h5>
           </p>

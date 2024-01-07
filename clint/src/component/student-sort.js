@@ -4,6 +4,7 @@ import Stack from 'react-bootstrap/Stack';    //เอาไว้ตกแต�
 import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function StudentSort() {   //ชื่อฟังก์ชั่นควรเป็นตัวใหญ่
   const [error, setError] = useState(null);
@@ -41,20 +42,24 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
   return (
     <div>
       <div className="head">
-        ประกาศคะแนน
+        รายชื่อวิชา
       </div>
-      {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
-        <Card className="item">
-          <Card.Body>
-            <Card.Title>
-              <div key={id}>
-                {attributes.subject}
-              </div>
-            </Card.Title>
-            <button onClick={() => check_data_user(attributes.subject)}>View</button>
-          </Card.Body>
-        </Card>
-      ))}
+      <div className="cards-container">
+        {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
+          <Card key={id} className="item">
+            <p>
+            <Card.Body>
+              <Card.Title>
+                <div  >
+                  {attributes.subject}
+                </div>
+              </Card.Title>
+              <button onClick={() => check_data_user(attributes.subject)}>View</button>
+            </Card.Body>
+            </p>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
