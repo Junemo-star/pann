@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Stack from 'react-bootstrap/Stack';    //เอาไว้ตกแต่ง
 import { useNavigate } from 'react-router-dom';
+import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button';
 
 function StudentSort() {   //ชื่อฟังก์ชั่นควรเป็นตัวใหญ่
   const [error, setError] = useState(null);
@@ -19,7 +21,7 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
 
     //เรียกข้อมูล
     axios.get("http://localhost:1337/api/courses", config)
-    .then(({ data }) => setData(data.data))
+      .then(({ data }) => setData(data.data))
       .catch((error) => setError(error));
   }, []);
 
@@ -28,24 +30,31 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
     return <div>An error occured: {error.message}</div>;
   }
 
-  const check_data_user = (subject) =>{        //เมื่อกดหัวข้อคะแนนจะทำการแสดงรายระเอียดคะแนนของเราในหัวข้อนั้นๆ
-    try{
+  const check_data_user = (subject) => {        //เมื่อกดหัวข้อคะแนนจะทำการแสดงรายระเอียดคะแนนของเราในหัวข้อนั้นๆ
+    try {
       navigate(`/student/${subject}`)
-    }catch (e) {
+    } catch (e) {
       console.log(e)
     }
   }
 
   return (
     <div>
-      <h1>ประกาศคะแนน</h1>
-      <ul>
-          {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
-            <button key={id} onClick={() => check_data_user(attributes.subject)}>
-              {attributes.subject}
-            </button>
-          ))}
-      </ul>
+      <div className="head">
+        ประกาศคะแนน
+      </div>
+      {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
+        <Card className="item">
+          <Card.Body>
+            <Card.Title>
+              <div key={id}>
+                {attributes.subject}
+              </div>
+            </Card.Title>
+            <button onClick={() => check_data_user(attributes.subject)}>View</button>
+          </Card.Body>
+        </Card>
+      ))}
     </div>
   );
 }

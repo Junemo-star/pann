@@ -15,9 +15,6 @@
     "subject": {
       "type": "string"
     },
-    "description": {
-      "type": "string"
-    },
     "entries": {
       "type": "relation",
       "relation": "oneToMany",

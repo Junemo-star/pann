@@ -9,7 +9,7 @@ import StudentPage from './page/Studentpage';
 import Stuffpage from './page/Stuffpage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Showinfo from './page/Show';
-import Showpoint from './page/Show-point';
+import StaticExample from './page/Testcode';
 
 const router = createBrowserRouter([
   {
@@ -33,9 +33,9 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/student/:courseName/:entry",
-    element: <Showpoint/>
-  }
+    path: "/test",
+    element: <StaticExample />
+  },
 
 ]);
 

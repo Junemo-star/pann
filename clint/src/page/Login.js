@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const navigate = useNavigate()
-    const [username, setUsername] = useState('223');
-    const [password, setPassword] = useState('123456');
+    const [username, setUsername] = useState("223");
+    const [password, setPassword] = useState("123456");
     const [submitEnabled, setSubmitEnabled] = useState(true);
 
 
@@ -33,9 +33,9 @@ const LoginForm = () => {
 
             //เก็บ jwt ในฟังก์ชั่นเพื่อเรียกใช้งานในหน้า component อื่น
             const saveTokenToLocalStorage = (token) => {
-                localStorage.setItem('jwtToken', token);
+                localStorage.setItem('jwtToken', token);        //เก็บ jwt token
             }
-            localStorage.setItem('usern', username);
+            localStorage.setItem('usern', username);           //เก็บชื่อ username
             saveTokenToLocalStorage(result.data.jwt)
             axios.defaults.headers.common = {
                 Authorization: `Bearer &{result.data.jwt}`

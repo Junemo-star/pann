@@ -1,0 +1,18 @@
+.bgCard {
+    background-color: #008000;
+}
+
+.head {
+    background-color: #008000;
+    text-align: center;
+    margin: auto;
+    font-size: 1cm;
+    color: white;
+}
+
+.item {
+    height: auto;
+    width: 20cm;
+    grid-area: center;
+    place-self: center;
+}

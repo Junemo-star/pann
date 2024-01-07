@@ -375,7 +375,6 @@ export interface ApiCourseCourse extends Schema.CollectionType {
   };
   attributes: {
     subject: Attribute.String;
-    description: Attribute.String;
     entries: Attribute.Relation<
       'api::course.course',
       'oneToMany',
