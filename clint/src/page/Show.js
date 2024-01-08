@@ -104,7 +104,8 @@ function MyVerticallyCenteredModal(props) {
       },
     };
 
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
+      courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
       .then(({ data }) => {
         const filteredData = data.data.filter(item =>
           item.attributes.course.data !== null &&
@@ -118,6 +119,11 @@ function MyVerticallyCenteredModal(props) {
       })
       .catch((error) => setError(error));
   }, [courseName, user, entry]);
+
+  const see = (id) => {
+    //axios.get(`http://localhost:1337/api/entries/${id}/seedata`, config)
+    console.log(id)
+  }
 
   return (
     <Modal
@@ -134,14 +140,25 @@ function MyVerticallyCenteredModal(props) {
 
       <Modal.Body>
         <h4>{entry}</h4>
-        {data.map(({ id, attributes }) => (
-          <p key={id}>
-            <h5>{attributes.result}</h5>
-          </p>
-        ))}
+        {data.length === 0
+          ? <h5>ไม่มีคะแนน</h5>
+          : <div>
+              {data.map(({ id, attributes }) => (
+                <p key={id}>
+                  <h5>{attributes.result}</h5>
+                </p>
+              ))}
+          </div>
+        }
+        
       </Modal.Body>
 
       <Modal.Footer>
+        {console.log("-------------")}
+        {console.log(data)}
+        {data.length > 0 &&(
+          <Button onClick={() => see(data[0].id)}>ดูรายละเอียด</Button>
+        )}
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
 

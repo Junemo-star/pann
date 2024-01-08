@@ -9,7 +9,6 @@ import StudentPage from './page/Studentpage';
 import Stuffpage from './page/Stuffpage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Showinfo from './page/Show';
-import StaticExample from './page/Testcode';
 
 const router = createBrowserRouter([
   {
@@ -32,10 +31,11 @@ const router = createBrowserRouter([
     element: <Showinfo/>,
   },
 
-  {
+  // หากต้องการเทสให้ import ฟังชั่นเข้ามา พร้อมลิ้งที่ element
+/*   { 
     path: "/test",
-    element: <StaticExample />
-  },
+    element: 
+  }, */
 
 ]);
 

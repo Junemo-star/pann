@@ -44,7 +44,8 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
       <div className="head">
         รายชื่อวิชา
       </div>
-      <div className="cards-container">
+
+      <div className="cards-container"  style={{margin: '20px'}}>
         {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
           <Card key={id} className="item">
             <p>
