@@ -1,5 +1,5 @@
 // SimpleLoginForm.js
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const navigate = useNavigate()
-    const [username, setUsername] = useState("223");
-    const [password, setPassword] = useState("123456");
+    const [username, setUsername] = useState();
+    const [password, setPassword] = useState();
     const [submitEnabled, setSubmitEnabled] = useState(true);
 
     const handleUsernameChange = (e) => {
@@ -28,11 +28,13 @@ const LoginForm = () => {
                 identifier: username,
                 password: password
             })
-
+            
             //เก็บ jwt ในฟังก์ชั่นเพื่อเรียกใช้งานในหน้า component อื่น
             const saveTokenToLocalStorage = (token) => {
                 localStorage.setItem('jwtToken', token);        //เก็บ jwt token
             }
+            saveTokenToLocalStorage(result.data.jwt)
+
             localStorage.setItem('usern', username);           //เก็บชื่อ username
             
             const config = {
@@ -45,10 +47,10 @@ const LoginForm = () => {
             result = await axios.get('http://localhost:1337/api/users/me?populate=role', config)
 
             if (result.data.role) {
-                if (result.data.role.name == 'student') {
+                if (result.data.role.name === 'student') {
                     navigate('/student');
                 }
-                if (result.data.role.name == 'stuff') {
+                if (result.data.role.name === 'stuff') {
                     navigate('/stuff');
                 }
             }

@@ -27,8 +27,14 @@
 
 .backposition {
     height: auto;
-    width: 30cm;
     margin: 10px;
     display: flex;
     justify-content: flex-end; /* ย้ายไปทางขวาสุด */
+}
+
+.right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }

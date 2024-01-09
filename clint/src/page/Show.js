@@ -72,7 +72,7 @@ const Showinfo = () => {
           </Card>
         ))}
 
-        <div className="backposition">
+        <div className="backposition" style={{width: '30cm'}}>
           <button onClick={handleGoBack}>Go back</button>
         </div>
  
