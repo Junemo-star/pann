@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
-import './css/style.css'
+import '../css/style.css'
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -14,19 +14,13 @@ const Showinfo = () => {
   const [data, setData] = useState([])
   const [error, setError] = useState(null)
 
-  const { courseName } = useParams()
-  const user = localStorage.getItem('usern')
-
-  const [datapoint, setDatapoint] = useState()
-  const [error2, setError2] = useState(null)
-  const [name, setName] = useState()
-  const [config, setConfig] = useState()
   const [des, setDes] = useState()
 
   const handleGoBack = () => {
     navigate('/student');
   };
 
+  //////////////////////////////////////////////////////
   useEffect(() => {
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
@@ -41,6 +35,11 @@ const Showinfo = () => {
       .then(({ data }) => setData(data.data))
       .catch((error) => setError(error));
   }, []);
+  if (error) {
+    // Print errors if any
+    return <div>An error occured: {error.message}</div>;
+  }
+  //////////////////////////////////////////////////////
 
   const showpoint = (entryname) => {
     try {
@@ -97,6 +96,7 @@ function MyVerticallyCenteredModal(props) {
     return storedData ? JSON.parse(storedData) : [];
   });
 
+  //////////////////////////////////////////////////////
   useEffect(() => {
     const config = {
       headers: {
@@ -119,10 +119,23 @@ function MyVerticallyCenteredModal(props) {
       })
       .catch((error) => setError(error));
   }, [courseName, user, entry]);
+  if (error) {
+    // Print errors if any
+    return <div>An error occured: {error.message}</div>;
+  }
+  //////////////////////////////////////////////////////
 
   const see = (id) => {
-    //axios.get(`http://localhost:1337/api/entries/${id}/seedata`, config)
-    console.log(id)
+    axios.get(`http://localhost:1337/api/entries/${id}/seedata`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+      }
+    })
+    .then(() => {
+      console.log(id);
+      window.location.reload(); // รีเฟรชหน้าเว็บ
+    })
+    .catch((error) => console.error(error));
   }
 
   return (
@@ -145,7 +158,7 @@ function MyVerticallyCenteredModal(props) {
           : <div>
               {data.map(({ id, attributes }) => (
                 <p key={id}>
-                  <h5>{attributes.result}</h5>
+                  {attributes.result}
                 </p>
               ))}
           </div>
@@ -154,14 +167,14 @@ function MyVerticallyCenteredModal(props) {
       </Modal.Body>
 
       <Modal.Footer>
-        {console.log("-------------")}
-        {console.log(data)}
-        {data.length > 0 &&(
-          <Button onClick={() => see(data[0].id)}>ดูรายละเอียด</Button>
+        {data.length > 0 && data[0].attributes && data[0].attributes.seedata === null
+        ?(
+          <Button onClick={() => see(data[0].id)}>รับทราบ</Button>
+        ) : (
+          <Button onClick={() => see(data[0].id)} disabled>รับทราบ</Button>
         )}
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
-
     </Modal>
   );
 }

@@ -10,6 +10,10 @@ import Stuffpage from './page/Stuffpage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Showinfo from './page/Show';
 
+/////////////---test---//////////////////
+
+/////////////---test---//////////////////
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,7 +39,8 @@ const router = createBrowserRouter([
 /*   { 
     path: "/test",
     element: 
-  }, */
+  },
+ */
 
 ]);
 

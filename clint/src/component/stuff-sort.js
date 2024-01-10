@@ -1,14 +1,19 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Card, Form, FormGroup } from "react-bootstrap";
-import "../page/css/style.css"
+import { Card, Form } from "react-bootstrap";
+import "../css/style.css"
+import "../css/table.css"
+import { useNavigate } from 'react-router-dom'
 
 function StuffpageSort() {
+  const navigate = useNavigate()
   const [error, setError] = useState(null);
   const [datacouse, setDatacouse] = useState([]);
   const [selectedValue, setSelectedValue] = useState('');
   const [dataevent, setDataevent] = useState([])
   const [selectedEvent, setSelectedEvent] = useState('');
+  const [show, setShow] = useState()
+  const [showyet, setShowyet] = useState(false)
 
   useEffect(() => {
     //เก็บข้อมูล jwt ที่ได้จากการ login
@@ -27,7 +32,7 @@ function StuffpageSort() {
     axios.get("http://localhost:1337/api/events", config)
       .then(({ data }) => setDataevent(data.data))
       .catch((error) => setError(error));
-  
+
   }, []);
 
   if (error) {
@@ -49,12 +54,29 @@ function StuffpageSort() {
     }
   };
 
-  const test = () => {
-    { console.log(selectedValue) }
-    { console.log(selectedEvent) }
-    { console.log(dataevent) }
+  const showpointstudent = () => {
+    setShowyet(true)
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${selectedValue}&populate[owner]=*&populate[event][filters][name]=${selectedEvent}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+      }
+    })
+      .then(({ data }) => {
+        const filteredData = data.data.filter(item =>
+          item.attributes.course.data !== null &&
+          item.attributes.event.data !== null
+        );
+        setShow(filteredData);
+        //console.log(filteredData);  // ให้ใช้ console.log ที่นี้
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
   }
 
+  const up = () => {
+    navigate('/upload')
+  }
 
   return (
     <div>
@@ -63,18 +85,18 @@ function StuffpageSort() {
       </div>
 
       <Card style={{ margin: '20px', display: 'flex' }}>
-        <Form.Group style={{ display: 'flex'}}>
+        <Form.Group style={{ display: 'flex' }}>
 
-          <Form.Select aria-label="Default select example" style={{ width: '200px' , marginRight: '30px'  }} 
-          onChange={handleSelectChange_COUSE} value={selectedValue}>
+          <Form.Select aria-label="Default select example" style={{ width: '200px', marginRight: '30px' }}
+            onChange={handleSelectChange_COUSE} value={selectedValue}>
             <option>เลือกวิชา</option>
             {datacouse.map(({ id, attributes }) => (
               <option key={id} value={attributes.subject}>{attributes.subject}</option>
             ))}
           </Form.Select>
 
-          <Form.Select aria-label="Default select example" style={{ width: '200px' }} 
-          onChange={handleSelectChange_EVENT} value={selectedEvent}>
+          <Form.Select aria-label="Default select example" style={{ width: '200px' }}
+            onChange={handleSelectChange_EVENT} value={selectedEvent}>
             <option>เลือกอีเว้น</option>
             {dataevent.map(({ id, attributes }) => (
               <option key={id} value={attributes.name}>{attributes.name}</option>
@@ -85,11 +107,48 @@ function StuffpageSort() {
       </Card>
 
       <div className="backposition" style={{ margin: '20px' }}>
-        <button onClick={() => test()} style={{ width: '3cm' }}>View</button>
+        <button onClick={() => showpointstudent()} style={{ width: '3cm' }}>View</button>
       </div>
+
+      <div>
+        <Card style={{ margin: '20px' }}>
+          {showyet && show && show.length > 0 ? (
+            <div>
+
+              <table>
+
+                <thead>
+                  <tr>
+                    <th>ชื่อ</th>
+                    <th>คะแนน</th>
+                    <th>ดูคะแนนแล้วหรือยัง</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {show.map(({ id, attributes }) => (
+                    <tr key={id}>
+                      <td>{attributes.owner.data.attributes.username}</td>
+                      <td>{attributes.result}</td>
+                      <td>{attributes.seedata}</td>
+                    </tr>
+                  ))}
+                </tbody>
+
+              </table>
+
+            </div>
+          ) : (
+            <h2 style={{margin: "20px", textAlign: "center"}}>
+              ไม่มีข้อมูล
+            </h2>
+          )}
+          {console.log(show)}
+        </Card>
+      </div>
+
     </div>
   );
 }
 
 export default StuffpageSort;
-
