@@ -1,14 +1,18 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Stack from 'react-bootstrap/Stack';    //เอาไว้ตกแต่ง
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/style.css'
+import { Container, Row, Col, CardGroup } from "react-bootstrap";
 
 function StudentSort() {   //ชื่อฟังก์ชั่นควรเป็นตัวใหญ่
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
+  const [dataname, setDataname] = useState([])
+  const [hoverr, setHoverr] = useState(null)
   const navigate = useNavigate()      //N a v i g a t e 
 
   useEffect(() => {
@@ -24,6 +28,10 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
     axios.get("http://localhost:1337/api/courses", config)
       .then(({ data }) => setData(data.data))
       .catch((error) => setError(error));
+
+    axios.get("http://localhost:1337/api/users/me", config)
+      .then(({ data }) => setDataname(data))
+      .catch((error) => console.log(error));
   }, []);
 
   if (error) {
@@ -39,26 +47,68 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
     }
   }
 
+  const handleLogout = () => {
+    // Remove JWT Token from Local Storage
+    window.localStorage.removeItem("jwtToken");
+    // Clear Authorization Header in Axios Defaults
+    axios.defaults.headers.common.Authorization = "";
+    // Navigate to the "/" path (adjust this if using a different routing library)
+    navigate("/");
+  }
+
   return (
     <div>
-      <div className="head">
-        รายชื่อวิชา
+      {console.log(dataname)}
+      <div className="button-container">
+        <div className="userhead">
+          {dataname.name}
+        </div>
+
+        <button className="button"></button>
+
+        <button className="button"></button>
+
+        <button className="button" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
 
-      <div className="cards-container"  style={{margin: '20px'}}>
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        marginTop: "20px",
+        fontSize: "1.5cm"
+      }}>
+        รายวิชา
+      </div>
+
+      <div className="cards-container" style={{ margin: '20px' }}>
         {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
-          <Card key={id} className="item">
-            <p>
-            <Card.Body>
-              <Card.Title>
-                <div  >
-                  {attributes.subject}
-                </div>
-              </Card.Title>
-              <button onClick={() => check_data_user(attributes.subject)}>View</button>
-            </Card.Body>
-            </p>
-          </Card>
+          <Link className="no-underline" onClick={() => check_data_user(attributes.subject)}>
+            <Card
+              className="item"
+              onMouseOver={() => setHoverr(id)}
+              onMouseOut={() => setHoverr(null)}
+              style={{
+                transition: "background-color 0.3s",
+                backgroundColor:
+                  hoverr === id
+                    ? "rgba(0, 60, 113, 0.2)"
+                    : "rgba(0, 60, 113, 0.05)",
+                cursor: "pointer",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              }} 
+            >
+              <Card.Body>
+                <Card.Title>
+                  <div>
+                    <h2>{attributes.subject}</h2>
+                    <h5>{attributes.teach}</h5>
+                  </div>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>

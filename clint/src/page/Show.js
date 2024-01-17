@@ -36,7 +36,6 @@ const Showinfo = () => {
       .catch((error) => setError(error));
   }, []);
   if (error) {
-    // Print errors if any
     return <div>An error occured: {error.message}</div>;
   }
   //////////////////////////////////////////////////////

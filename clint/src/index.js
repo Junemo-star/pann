@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Showinfo from './page/Show';
 
 /////////////---test---//////////////////
-
+import test from './page/Testcode';
 /////////////---test---//////////////////
 
 const router = createBrowserRouter([
@@ -36,11 +36,11 @@ const router = createBrowserRouter([
   },
 
   // หากต้องการเทสให้ import ฟังชั่นเข้ามา พร้อมลิ้งที่ element
-/*   { 
+  { 
     path: "/test",
-    element: 
+    element: <test></test>
   },
- */
+
 
 ]);
 

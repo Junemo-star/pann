@@ -1,14 +1,14 @@
 // SimpleLoginForm.js
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import '../css/button.css'
 
 const LoginForm = () => {
     const navigate = useNavigate()
-    const [username, setUsername] = useState();
-    const [password, setPassword] = useState();
+    const [username, setUsername] = useState("279");
+    const [password, setPassword] = useState("123456");
     const [submitEnabled, setSubmitEnabled] = useState(true);
 
     const handleUsernameChange = (e) => {
@@ -28,7 +28,7 @@ const LoginForm = () => {
                 identifier: username,
                 password: password
             })
-            
+
             //เก็บ jwt ในฟังก์ชั่นเพื่อเรียกใช้งานในหน้า component อื่น
             const saveTokenToLocalStorage = (token) => {
                 localStorage.setItem('jwtToken', token);        //เก็บ jwt token
@@ -36,13 +36,13 @@ const LoginForm = () => {
             saveTokenToLocalStorage(result.data.jwt)
 
             localStorage.setItem('usern', username);           //เก็บชื่อ username
-            
+
             const config = {
                 headers: {
-                  'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
                 },
             };
-            
+
             //เช็ค role
             result = await axios.get('http://localhost:1337/api/users/me?populate=role', config)
 
@@ -80,7 +80,7 @@ const LoginForm = () => {
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label style={{marginTop: "10px"}}>Password</Form.Label>
                         <Form.Control
                             type="password"
                             placeholder="Password"
@@ -90,9 +90,29 @@ const LoginForm = () => {
                         />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit" >
+                    <button class="custom-button">
+                        <div class="svg-wrapper-1">
+                            <div class="svg-wrapper">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    width="24"
+                                    height="24"
+                                >
+                                    <path fill="none" d="M0 0h24v24H0z"></path>
+                                    <path
+                                        fill="currentColor"
+                                        d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                                    ></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span>Send</span>
+                    </button>
+
+                    {/* <Button variant="primary" type="submit" >
                         Submit
-                    </Button>
+                    </Button> */}
                 </Form>
             </div>
         </Container>

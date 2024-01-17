@@ -34,7 +34,6 @@ function StuffpageSort() {
       .catch((error) => setError(error));
 
   }, []);
-
   if (error) {
     // Print errors if any
     return <div>An error occured: {error.message}</div>;
@@ -56,7 +55,8 @@ function StuffpageSort() {
 
   const showpointstudent = () => {
     setShowyet(true)
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${selectedValue}&populate[owner]=*&populate[event][filters][name]=${selectedEvent}`, {
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
+      selectedValue}&populate[owner]=*&populate[event][filters][name]=${selectedEvent}`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
       }

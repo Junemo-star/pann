@@ -20,6 +20,9 @@
       "relation": "oneToMany",
       "target": "api::entry.entry",
       "mappedBy": "course"
+    },
+    "teach": {
+      "type": "string"
     }
   }
 }

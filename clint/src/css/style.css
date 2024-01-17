@@ -16,20 +16,27 @@
 .item {
     height: auto;
     width: 30cm;
-    margin: 10px
+    margin: 10px;
+}
+
+.userhead {
+    font-size: 1cm;
+    color: white;
 }
 
 .cards-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;  /* ให้รายการแสดงตรงกลาง */
+    justify-content: center;
+    /* ให้รายการแสดงตรงกลาง */
 }
 
 .backposition {
     height: auto;
     margin: 10px;
     display: flex;
-    justify-content: flex-end; /* ย้ายไปทางขวาสุด */
+    justify-content: flex-end;
+    /* ย้ายไปทางขวาสุด */
 }
 
 .right {
@@ -38,3 +45,51 @@
     align-items: center;
     margin-bottom: 10px;
 }
+
+.logout {
+    display: flex;
+    justify-content: right;
+    margin: 20px;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+.button-container {
+    display: flex;
+    background-color: green;
+    height: 2cm;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.button {
+    outline: 0 !important;
+    border: 0 !important;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: all ease-in-out 0.3s;
+    cursor: pointer;
+    font-size: 0.8cm;
+}
+
+.button:hover {
+    transform: translateY(-3px);
+}
+
+.icon {
+    font-size: 20px;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+
+.no-underline {
+    text-decoration: none;
+    /* เปลี่ยนสีตามที่คุณต้องการ */
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------*/
