@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
 import '../css/style.css'
 import React from 'react';
@@ -15,6 +15,8 @@ const Showinfo = () => {
   const [error, setError] = useState(null)
 
   const [des, setDes] = useState()
+  const [hoverr, setHoverr] = useState(null)
+  const { courseName } = useParams()
 
   const handleGoBack = () => {
     navigate('/student');
@@ -31,10 +33,11 @@ const Showinfo = () => {
     };
 
     //เรียกข้อมูล
-    axios.get("http://localhost:1337/api/events", config)
+    axios.get(`http://localhost:1337/api/events?populate[courses][filters][subject][$eq]=${courseName}`, config)
       .then(({ data }) => setData(data.data))
       .catch((error) => setError(error));
   }, []);
+  
   if (error) {
     return <div>An error occured: {error.message}</div>;
   }
@@ -53,27 +56,42 @@ const Showinfo = () => {
     <div>
       <div class="head">
         ประกาศคะแนน
+        {console.log(data)}
       </div>
+
       <div className="cards-container">
-        {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล
-          <Card key={id} className="item">
-            <Card.Body>
-              <Card.Title>
+        {data.filter(item => item.attributes.courses.data.length > 0).map(({ id, attributes }) => (      //แสดงผลข้อมูล
+          <Link className="no-underline" onClick={() => showpoint(attributes.name)}>
+            <Card key={id}
+              className="item"
+              onMouseOver={() => setHoverr(id)}
+              onMouseOut={() => setHoverr(null)}
+              style={{
+                transition: "background-color 0.3s",
+                marginTop: "px", 
+                backgroundColor:
+                  hoverr === id
+                    ? "rgba(0, 60, 113, 0.2)"
+                    : "rgba(0, 60, 113, 0.05)",
+                cursor: "pointer",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Card.Body>
+                <Card.Title>
                   <div>
                     {attributes.name}
                   </div>
-                  <div style={{ margin: '10px' }}>
-                    <button onClick={() => showpoint(attributes.name)}>View</button>
-                  </div>
-              </Card.Title>
-            </Card.Body>
-          </Card>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Link>
         ))}
 
-        <div className="backposition" style={{width: '30cm'}}>
+        <div className="backposition" style={{ width: '30cm' }}>
           <button onClick={handleGoBack}>Go back</button>
         </div>
- 
+
         <MyVerticallyCenteredModal
           show={modalShow}
           onHide={() => setModalShow(false)}
@@ -130,11 +148,11 @@ function MyVerticallyCenteredModal(props) {
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
       }
     })
-    .then(() => {
-      console.log(id);
-      window.location.reload(); // รีเฟรชหน้าเว็บ
-    })
-    .catch((error) => console.error(error));
+      .then(() => {
+        console.log(id);
+        window.location.reload(); // รีเฟรชหน้าเว็บ
+      })
+      .catch((error) => console.error(error));
   }
 
   return (
@@ -155,23 +173,23 @@ function MyVerticallyCenteredModal(props) {
         {data.length === 0
           ? <h5>ไม่มีคะแนน</h5>
           : <div>
-              {data.map(({ id, attributes }) => (
-                <p key={id}>
-                  {attributes.result}
-                </p>
-              ))}
+            {data.map(({ id, attributes }) => (
+              <p key={id}>
+                {attributes.result}
+              </p>
+            ))}
           </div>
         }
-        
+
       </Modal.Body>
 
       <Modal.Footer>
         {data.length > 0 && data[0].attributes && data[0].attributes.seedata === null
-        ?(
-          <Button onClick={() => see(data[0].id)}>รับทราบ</Button>
-        ) : (
-          <Button onClick={() => see(data[0].id)} disabled>รับทราบ</Button>
-        )}
+          ? (
+            <Button onClick={() => see(data[0].id)}>รับทราบ</Button>
+          ) : (
+            <Button onClick={() => see(data[0].id)} disabled>รับทราบ</Button>
+          )}
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
     </Modal>

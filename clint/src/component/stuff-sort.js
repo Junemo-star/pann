@@ -14,6 +14,8 @@ function StuffpageSort() {
   const [selectedEvent, setSelectedEvent] = useState('');
   const [show, setShow] = useState()
   const [showyet, setShowyet] = useState(false)
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [ShowAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     //เก็บข้อมูล jwt ที่ได้จากการ login
@@ -29,11 +31,12 @@ function StuffpageSort() {
       .then(({ data }) => setDatacouse(data.data))
       .catch((error) => setError(error));
 
-    axios.get("http://localhost:1337/api/events", config)
-      .then(({ data }) => setDataevent(data.data))
-      .catch((error) => setError(error));
-
-  }, []);
+    if (selectedSubject !== '') {
+      axios.get(`http://localhost:1337/api/events?populate[courses][filters][subject][$eq]=${selectedSubject}`, config)
+        .then(({ data }) => setDataevent(data.data))
+        .catch((error) => setError(error));
+    }
+  }, [selectedSubject]);
   if (error) {
     // Print errors if any
     return <div>An error occured: {error.message}</div>;
@@ -43,6 +46,8 @@ function StuffpageSort() {
   const handleSelectChange_COUSE = (event) => {
     if (event.target.value !== "เลือกวิชา") {
       setSelectedValue(event.target.value);
+      setSelectedSubject(event.target.value);
+      setSelectedEvent(''); // รีเซ็ตค่าที่เกี่ยวข้องกับอีเว้น
     }
   };
 
@@ -74,8 +79,12 @@ function StuffpageSort() {
       });
   }
 
-  const up = () => {
+/*   const up = () => {
     navigate('/upload')
+  } */
+
+  const add = () => {
+    navigate('/add')
   }
 
   return (
@@ -98,15 +107,16 @@ function StuffpageSort() {
           <Form.Select aria-label="Default select example" style={{ width: '200px' }}
             onChange={handleSelectChange_EVENT} value={selectedEvent}>
             <option>เลือกอีเว้น</option>
-            {dataevent.map(({ id, attributes }) => (
+            {dataevent.filter(item => item.attributes.courses.data.length > 0).map(({ id, attributes }) => (
               <option key={id} value={attributes.name}>{attributes.name}</option>
             ))}
           </Form.Select>
 
         </Form.Group>
       </Card>
-
+      
       <div className="backposition" style={{ margin: '20px' }}>
+        <button onClick={() => add()}>Add</button>
         <button onClick={() => showpointstudent()} style={{ width: '3cm' }}>View</button>
       </div>
 
@@ -139,7 +149,7 @@ function StuffpageSort() {
 
             </div>
           ) : (
-            <h2 style={{margin: "20px", textAlign: "center"}}>
+            <h2 style={{ margin: "20px", textAlign: "center" }}>
               ไม่มีข้อมูล
             </h2>
           )}

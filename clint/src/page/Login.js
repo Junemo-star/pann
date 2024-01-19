@@ -1,14 +1,14 @@
 // SimpleLoginForm.js
 import React, { useState } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
+import { Form, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../css/button.css'
 
 const LoginForm = () => {
     const navigate = useNavigate()
-    const [username, setUsername] = useState("279");
-    const [password, setPassword] = useState("123456");
+    const [username, setUsername] = useState();
+    const [password, setPassword] = useState();
     const [submitEnabled, setSubmitEnabled] = useState(true);
 
     const handleUsernameChange = (e) => {
