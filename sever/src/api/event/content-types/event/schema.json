@@ -16,7 +16,7 @@
       "type": "string"
     },
     "datetime": {
-      "type": "date"
+      "type": "datetime"
     },
     "users_permissions_user": {
       "type": "relation",
@@ -30,9 +30,9 @@
       "target": "api::entry.entry",
       "mappedBy": "event"
     },
-    "courses": {
+    "course": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "manyToOne",
       "target": "api::course.course",
       "inversedBy": "events"
     }

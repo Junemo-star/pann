@@ -9,7 +9,7 @@ import StudentPage from './page/Studentpage';
 import Stuffpage from './page/Stuffpage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Showinfo from './page/Show';
-import AddItemModal from './component/additem';
+import AddEventForm from './component/additem';
 
 /////////////---test---//////////////////
 import test from './page/Testcode';
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
 
   {
     path: "/add",
-    element: <AddItemModal />
+    element: <AddEventForm />
   }
 
 ]);

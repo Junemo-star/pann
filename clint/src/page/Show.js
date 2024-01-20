@@ -33,11 +33,16 @@ const Showinfo = () => {
     };
 
     //เรียกข้อมูล
-    axios.get(`http://localhost:1337/api/events?populate[courses][filters][subject][$eq]=${courseName}`, config)
-      .then(({ data }) => setData(data.data))
+    axios.get(`http://localhost:1337/api/events?populate[course][filters][subject][$eq]=${courseName}`, config)
+      .then(({ data }) => {
+        const filteredData = data.data.filter(item =>
+          item.attributes.course.data !== null
+        )
+        setData(filteredData)
+      })
       .catch((error) => setError(error));
   }, []);
-  
+
   if (error) {
     return <div>An error occured: {error.message}</div>;
   }
@@ -60,33 +65,52 @@ const Showinfo = () => {
       </div>
 
       <div className="cards-container">
-        {data.filter(item => item.attributes.courses.data.length > 0).map(({ id, attributes }) => (      //แสดงผลข้อมูล
-          <Link className="no-underline" onClick={() => showpoint(attributes.name)}>
-            <Card key={id}
-              className="item"
-              onMouseOver={() => setHoverr(id)}
-              onMouseOut={() => setHoverr(null)}
-              style={{
-                transition: "background-color 0.3s",
-                marginTop: "px", 
-                backgroundColor:
-                  hoverr === id
-                    ? "rgba(0, 60, 113, 0.2)"
-                    : "rgba(0, 60, 113, 0.05)",
-                cursor: "pointer",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <Card.Body>
-                <Card.Title>
-                  <div>
-                    {attributes.name}
-                  </div>
-                </Card.Title>
-              </Card.Body>
-            </Card>
-          </Link>
-        ))}
+        {data.length === 0 ? (
+          <Card className="item" style={{
+            height: "3cm",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+            <h1>ไม่มีข้อมูล</h1>
+          </Card>
+        ) : (
+          data.map(({ id, attributes }) => (
+            <Link
+              className="no-underline"
+              onClick={() => {
+                // ตรวจสอบว่าเป็นไปตามเงื่อนไขหรือไม่
+                if (new Date() >= new Date(attributes.datetime)) {
+                  showpoint(attributes.name);
+                } else {
+                  // แสดงข้อความหรือทำอย่างอื่นที่คุณต้องการเมื่อไม่สามารถกดได้
+                  console.log("Cannot click yet. Not reached the scheduled time.");
+                }
+              }}>
+              <Card
+                key={id}
+                className="item"
+                onMouseOver={() => setHoverr(id)}
+                onMouseOut={() => setHoverr(null)}
+                style={{
+                  transition: "background-color 0.3s",
+                  marginTop: "px",
+                  backgroundColor: hoverr === id && new Date() >= new Date(attributes.datetime) ? "rgba(0, 60, 113, 0.2)" : "rgba(0, 60, 113, 0.05)",
+                  cursor: "pointer",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <Card.Body>
+                  <Card.Title>
+                    <div>{attributes.name}</div>
+                    <div>{new Date(attributes.datetime).toLocaleString()}</div>
+                  </Card.Title>
+                </Card.Body>
+              </Card>
+            </Link>
+          ))
+        )}
+
 
         <div className="backposition" style={{ width: '30cm' }}>
           <button onClick={handleGoBack}>Go back</button>
@@ -121,8 +145,7 @@ function MyVerticallyCenteredModal(props) {
       },
     };
 
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
-      courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
       .then(({ data }) => {
         const filteredData = data.data.filter(item =>
           item.attributes.course.data !== null &&

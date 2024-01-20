@@ -32,11 +32,12 @@ function StuffpageSort() {
       .catch((error) => setError(error));
 
     if (selectedSubject !== '') {
-      axios.get(`http://localhost:1337/api/events?populate[courses][filters][subject][$eq]=${selectedSubject}`, config)
+      axios.get(`http://localhost:1337/api/events?populate[course][filters][subject][$eq]=${selectedSubject}`, config)
         .then(({ data }) => setDataevent(data.data))
         .catch((error) => setError(error));
     }
   }, [selectedSubject]);
+
   if (error) {
     // Print errors if any
     return <div>An error occured: {error.message}</div>;
@@ -68,7 +69,6 @@ function StuffpageSort() {
     })
       .then(({ data }) => {
         const filteredData = data.data.filter(item =>
-          item.attributes.course.data !== null &&
           item.attributes.event.data !== null
         );
         setShow(filteredData);
@@ -107,7 +107,7 @@ function StuffpageSort() {
           <Form.Select aria-label="Default select example" style={{ width: '200px' }}
             onChange={handleSelectChange_EVENT} value={selectedEvent}>
             <option>เลือกอีเว้น</option>
-            {dataevent.filter(item => item.attributes.courses.data.length > 0).map(({ id, attributes }) => (
+            {dataevent.filter(item => item.attributes.course.data !== null).map(({ id, attributes }) => (
               <option key={id} value={attributes.name}>{attributes.name}</option>
             ))}
           </Form.Select>

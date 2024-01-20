@@ -19,7 +19,7 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`, 
         // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
       },
     };
@@ -58,7 +58,7 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
 
   return (
     <div>
-      {console.log(dataname)}
+      {console.log(data)}
       <div className="button-container">
         <div className="userhead">
           {dataname.name}

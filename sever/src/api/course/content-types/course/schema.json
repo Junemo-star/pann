@@ -26,9 +26,9 @@
     },
     "events": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "oneToMany",
       "target": "api::event.event",
-      "mappedBy": "courses"
+      "mappedBy": "course"
     }
   }
 }

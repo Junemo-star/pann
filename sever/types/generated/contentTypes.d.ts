@@ -383,7 +383,7 @@ export interface ApiCourseCourse extends Schema.CollectionType {
     teach: Attribute.String;
     events: Attribute.Relation<
       'api::course.course',
-      'manyToMany',
+      'oneToMany',
       'api::event.event'
     >;
     createdAt: Attribute.DateTime;
@@ -464,7 +464,7 @@ export interface ApiEventEvent extends Schema.CollectionType {
   };
   attributes: {
     name: Attribute.String;
-    datetime: Attribute.Date;
+    datetime: Attribute.DateTime;
     users_permissions_user: Attribute.Relation<
       'api::event.event',
       'manyToOne',
@@ -475,9 +475,9 @@ export interface ApiEventEvent extends Schema.CollectionType {
       'oneToMany',
       'api::entry.entry'
     >;
-    courses: Attribute.Relation<
+    course: Attribute.Relation<
       'api::event.event',
-      'manyToMany',
+      'manyToOne',
       'api::course.course'
     >;
     createdAt: Attribute.DateTime;
