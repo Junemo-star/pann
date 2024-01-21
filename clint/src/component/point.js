@@ -2,12 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Card, CardBody, Form, FormGroup } from "react-bootstrap";
 
 const UploadFile = () => {
   const [excelData, setExcelData] = useState(null);
   const [stdid, setStdid] = useState([]);
   const [postSuccess, setPostSuccess] = useState(false); // Track post status
   const navigate = useNavigate();
+
+  const [error, setError] = useState(null);
+  const [datacouse, setDatacouse] = useState([]);
+  const [eventcouse, setEventcouse] = useState('');
 
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
@@ -37,7 +42,7 @@ const UploadFile = () => {
     try {
       const checkid = await axios.get('http://localhost:1337/api/users', {
         headers: {
-            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+          'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
         }
       });
       console.log(checkid);
@@ -69,12 +74,12 @@ const UploadFile = () => {
                 result: `${excelRow[0]}`,   //คะแนน
                 comment: `${excelRow[1]}`,   //คอมเม้น
                 owner: parseInt(userId),     //เลขประจำตัวนักศึกษา (3 ตัว)
-                event: 15,
+                event: eventcouse,
               },
             },
             {
               headers: {
-                  'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+                'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
               }
             }
           );
@@ -83,24 +88,81 @@ const UploadFile = () => {
           setPostSuccess(true);
         }
       }
+      window.location.reload();
     } catch (error) {
       console.error('Error posting to Strapi:', error);
     }
   };
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     if (postSuccess) {
       setPostSuccess(false);
-      window.location.reload();
+      //window.location.reload();
     }
+
+    axios.get("http://localhost:1337/api/events", {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+      },
+    })
+      .then(response => {
+        setDatacouse(response.data); // ที่นี่เราใช้ response.data ไม่ใช่ data.data
+      })
+      .catch((error) => setError(error));
+
   }, [postSuccess]);
+  if (error) {
+    // Print errors if any
+    return <div>An error occured: {error.message}</div>;
+  }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+  const choose = (event) => {
+    const selectedCourseId = event.target.value;
+    setEventcouse(selectedCourseId);
+  }
+
+  const handleGoBack = () => {
+    navigate('/add');
+  };
 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={postToStrapi} disabled={!excelData}>
-        Post to Strapi
-      </button>
+
+      <div className='head'>
+        <div style={{ margin: "60px" }}>
+          ระบบเพิ่มคะแนน
+        </div>
+        <button className="button" style={{ margin: "60px" }} onClick={handleGoBack}>
+          back
+        </button>
+      </div>
+
+      <Card style={{ margin: '20px', display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Form style={{ margin: '20px', display: "flex" }}>
+
+          <Form.Group style={{ width: "400px" }}>
+            <Form.Label>เลือกอีเว้น</Form.Label>
+            <Form.Select onChange={choose} style={{ width: '250px' }}>
+              <option>......</option>
+              {datacouse && datacouse?.data?.map((course) => (
+                <option key={course.id} value={course.id}>{course.attributes.name}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group controlId="formFile" style={{ width: "400px" }}>
+            <Form.Label>Default file input example</Form.Label>
+            <Form.Control type="file" onChange={handleFileChange} disabled={!eventcouse} />
+          </Form.Group>
+
+        </Form>
+
+        <button onClick={postToStrapi} disabled={!excelData} style={{ width: "400px", margin: "20px" }}>
+          ยืนยัน
+        </button>
+      </Card >
     </div>
   );
 };

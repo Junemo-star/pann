@@ -87,10 +87,24 @@ function StuffpageSort() {
     navigate('/add')
   }
 
+  const handleLogout = () => {
+    // Remove JWT Token from Local Storage
+    window.localStorage.removeItem("jwtToken");
+    // Clear Authorization Header in Axios Defaults
+    axios.defaults.headers.common.Authorization = "";
+    // Navigate to the "/" path (adjust this if using a different routing library)
+    navigate("/");
+  }
+
   return (
     <div>
       <div className="head">
-        คะแนนทั้งหมด
+        <div style={{margin: "20px"}}>
+          ระบบประกาศคะแนน(Admin)
+        </div>
+        <button className="button" onClick={handleLogout} style={{margin: "60px"}}>
+          Logout
+        </button>
       </div>
 
       <Card style={{ margin: '20px', display: 'flex' }}>
@@ -114,7 +128,7 @@ function StuffpageSort() {
 
         </Form.Group>
       </Card>
-      
+
       <div className="backposition" style={{ margin: '20px' }}>
         <button onClick={() => add()}>Add</button>
         <button onClick={() => showpointstudent()} style={{ width: '3cm' }}>View</button>
@@ -131,6 +145,7 @@ function StuffpageSort() {
                   <tr>
                     <th>ชื่อ</th>
                     <th>คะแนน</th>
+                    <th>คอมเม้น</th>
                     <th>ดูคะแนนแล้วหรือยัง</th>
                   </tr>
                 </thead>
@@ -140,6 +155,7 @@ function StuffpageSort() {
                     <tr key={id}>
                       <td>{attributes.owner.data.attributes.username}</td>
                       <td>{attributes.result}</td>
+                      <td>{attributes.comment}</td>
                       <td>{attributes.seedata}</td>
                     </tr>
                   ))}

@@ -78,14 +78,25 @@ const AddEventForm = () => {
         navigate('/upload')
     }
 
+    const handleGoBack = () => {
+        navigate('/stuff');
+    };
+
     return (
         <div>
             <div className='head'>
-                Add
+                <div style={{margin: "60px"}}>
+                    ระบบเพิ่มอีเว้น
+                </div>
+                
+                <button className="button" style={{margin: "60px"}} onClick={handleGoBack}>
+                    back
+                </button>
+                
             </div>
 
-            <Card style={{ margin: '20px'}}>
-                <Form onSubmit={handleSubmit} style={{ display: "flex", margin: "15px", justifyContent: 'space-between'}}>
+            <Card style={{ margin: '20px' }}>
+                <Form onSubmit={handleSubmit} style={{ display: "flex", margin: "15px", justifyContent: 'space-between' }}>
 
                     <Form.Group style={{ marginRight: "15px" }}>
                         <Form.Label>เพิ่มชื่ออีเว้น</Form.Label>
@@ -114,10 +125,9 @@ const AddEventForm = () => {
                         <Form.Control type="datetime-local" placeholder="เพิ่มอีเว้น" value={eventDateTime}
                             onChange={(e) => setEventDateTime(e.target.value)} style={{ width: '200px' }} />
                     </FormGroup>
+
                     <div>
-                    <button type="submit" style={{width: "3cm", height: "0.8cm",}}>
-                            Add Event
-                        </button>
+                        <button type="submit">Add Event</button>
                     </div>
                 </Form>
             </Card>
@@ -145,6 +155,8 @@ const AddEventForm = () => {
                     </Card.Body>
                 </Card>
             ))}
+
+
 
         </div>
     );
