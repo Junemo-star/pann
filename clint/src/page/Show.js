@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 const Showinfo = () => {
+  const user = localStorage.getItem('usern')
   const navigate = useNavigate()
   const [modalShow, setModalShow] = React.useState(false);
 
@@ -17,6 +18,8 @@ const Showinfo = () => {
   const [des, setDes] = useState()
   const [hoverr, setHoverr] = useState(null)
   const { courseName } = useParams()
+
+  const [checksee, setChecksee] = useState([])
 
   const handleGoBack = () => {
     navigate('/student');
@@ -41,6 +44,7 @@ const Showinfo = () => {
         setData(filteredData)
       })
       .catch((error) => setError(error));
+      
   }, []);
 
   if (error) {
@@ -59,11 +63,10 @@ const Showinfo = () => {
 
   return (
     <div>
-      <div class="head" style={{ marginBottom: "20px" }}>
+      <div className="head" style={{ marginBottom: "20px" }}>
         <div style={{ margin: "60px" }}>
           ประกาศคะแนน
-        </div>
-        {console.log(data)}   
+        </div> 
         <button className="button" onClick={handleGoBack} style={{ margin: "60px" }}> 
           back
         </button>
@@ -107,7 +110,6 @@ const Showinfo = () => {
               >
                 <Card.Body>
                   <Card.Title>
-                    {console.log(attributes)}
                     <div><h3>{attributes.name}</h3></div>
                     <div style={{ marginBottom: "8px" }}>{new Date(attributes.datetime).toLocaleString()}</div>
                     <div>
@@ -121,16 +123,14 @@ const Showinfo = () => {
                         )}
                       </h5>
                     </div>
+
                   </Card.Title>
                 </Card.Body>
               </Card>
             </Link>
           ))
         )}
-
-
-        
-
+        3
         <MyVerticallyCenteredModal
           show={modalShow}
           onHide={() => setModalShow(false)}
@@ -203,7 +203,6 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           {courseName}
-          {console.log(data)}
         </Modal.Title>
       </Modal.Header>
 

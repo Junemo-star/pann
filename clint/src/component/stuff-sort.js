@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Card, Form } from "react-bootstrap";
+import { Card, Form, FormControl } from "react-bootstrap";
 import "../css/style.css"
 import "../css/table.css"
 import { useNavigate } from 'react-router-dom'
@@ -16,6 +16,9 @@ function StuffpageSort() {
   const [showyet, setShowyet] = useState(false)
   const [selectedSubject, setSelectedSubject] = useState('');
   const [ShowAddModal, setShowAddModal] = useState(false);
+  const [search, setSearch] = useState('')
+
+  console.log(search)
 
   useEffect(() => {
     //เก็บข้อมูล jwt ที่ได้จากการ login
@@ -151,6 +154,14 @@ function StuffpageSort() {
       <div>
         <Card style={{ margin: '20px' }}>
           {showyet && show && show.length > 0 ? (
+            <FormControl onChange={(e) => setSearch(e.target.value)} placeholder="ค้นหาชื่อที่ต้องการ" />
+          ) : (
+            null
+          )}
+        </Card>
+
+        <Card style={{ margin: '20px' }}>
+          {showyet && show && show.length > 0 ? (
             <div>
 
               <table>
@@ -166,7 +177,12 @@ function StuffpageSort() {
                 </thead>
 
                 <tbody>
-                  {show.map(({ id, attributes }) => (
+                  {show.filter(({ id, attributes }) => {
+                    return search === '' 
+                      ? attributes 
+                      : attributes.owner.data.attributes.username.includes(search);
+                  })
+                  .map(({ id, attributes }) => (
                     <tr key={id}>
                       <td>{attributes.owner.data.attributes.username}</td>
                       <td>{attributes.result}</td>
@@ -185,7 +201,6 @@ function StuffpageSort() {
               ไม่มีข้อมูล
             </h2>
           )}
-          {console.log(show)}
         </Card>
       </div>
 
