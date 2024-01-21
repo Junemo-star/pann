@@ -30,11 +30,8 @@
     "seedata": {
       "type": "date"
     },
-    "course": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::course.course",
-      "inversedBy": "entries"
+    "comment": {
+      "type": "string"
     }
   }
 }

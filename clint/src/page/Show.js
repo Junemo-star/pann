@@ -102,8 +102,20 @@ const Showinfo = () => {
               >
                 <Card.Body>
                   <Card.Title>
-                    <div>{attributes.name}</div>
-                    <div>{new Date(attributes.datetime).toLocaleString()}</div>
+                    {console.log(attributes)}
+                    <div><h3>{attributes.name}</h3></div>
+                    <div style={{ marginBottom: "8px" }}>{new Date(attributes.datetime).toLocaleString()}</div>
+                    <div>
+                      <h5>
+                        {attributes.description !== null ? (
+                          attributes.description.split('\n').map((line, index) => (
+                            <span key={index}>{line}<br /></span>
+                          ))
+                        ) : (
+                          null
+                        )}
+                      </h5>
+                    </div>
                   </Card.Title>
                 </Card.Body>
               </Card>
@@ -145,10 +157,10 @@ function MyVerticallyCenteredModal(props) {
       },
     };
 
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
+      courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
       .then(({ data }) => {
         const filteredData = data.data.filter(item =>
-          item.attributes.course.data !== null &&
           item.attributes.event.data !== null &&
           item.attributes.owner.data !== null
         );
@@ -188,6 +200,7 @@ function MyVerticallyCenteredModal(props) {
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           {courseName}
+          {console.log(data)}
         </Modal.Title>
       </Modal.Header>
 

@@ -10,6 +10,7 @@ import Stuffpage from './page/Stuffpage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Showinfo from './page/Show';
 import AddEventForm from './component/additem';
+import UploadFile from './component/point';
 
 /////////////---test---//////////////////
 import test from './page/Testcode';
@@ -45,6 +46,11 @@ const router = createBrowserRouter([
   {
     path: "/add",
     element: <AddEventForm />
+  },
+
+  {
+    path: "/upload",
+    element: <UploadFile />
   }
 
 ]);
