@@ -96,6 +96,20 @@ function StuffpageSort() {
     navigate("/");
   }
 
+  const deleted = (itemId) => {
+    console.log(itemId)
+
+    const updatedData = show.filter(item => item.id !== itemId);
+    setShow(updatedData)
+    
+    axios.delete(`http://localhost:1337/api/entries/${itemId}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+      }
+    }).then(console.log("Success")).catch((error) => console.log(error))
+
+  }
+
   return (
     <div>
       <div className="head">
@@ -130,7 +144,7 @@ function StuffpageSort() {
       </Card>
 
       <div className="backposition" style={{ margin: '20px' }}>
-        <button onClick={() => add()}>Add</button>
+        <button onClick={() => add()}>เพิ่มข้อมูล</button>
         <button onClick={() => showpointstudent()} style={{ width: '3cm' }}>View</button>
       </div>
 
@@ -147,6 +161,7 @@ function StuffpageSort() {
                     <th>คะแนน</th>
                     <th>คอมเม้น</th>
                     <th>ดูคะแนนแล้วหรือยัง</th>
+                    <th>ตั้งค่า</th>
                   </tr>
                 </thead>
 
@@ -157,6 +172,7 @@ function StuffpageSort() {
                       <td>{attributes.result}</td>
                       <td>{attributes.comment}</td>
                       <td>{attributes.seedata}</td>
+                      <td><button onClick={() => deleted(id)}>ลบ</button></td>
                     </tr>
                   ))}
                 </tbody>

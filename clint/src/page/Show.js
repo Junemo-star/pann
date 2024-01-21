@@ -59,9 +59,14 @@ const Showinfo = () => {
 
   return (
     <div>
-      <div class="head">
-        ประกาศคะแนน
-        {console.log(data)}
+      <div class="head" style={{ marginBottom: "20px" }}>
+        <div style={{ margin: "60px" }}>
+          ประกาศคะแนน
+        </div>
+        {console.log(data)}   
+        <button className="button" onClick={handleGoBack} style={{ margin: "60px" }}> 
+          back
+        </button>
       </div>
 
       <div className="cards-container">
@@ -124,9 +129,7 @@ const Showinfo = () => {
         )}
 
 
-        <div className="backposition" style={{ width: '30cm' }}>
-          <button onClick={handleGoBack}>Go back</button>
-        </div>
+        
 
         <MyVerticallyCenteredModal
           show={modalShow}
@@ -210,9 +213,14 @@ function MyVerticallyCenteredModal(props) {
           ? <h5>ไม่มีคะแนน</h5>
           : <div>
             {data.map(({ id, attributes }) => (
-              <p key={id}>
-                {attributes.result}
-              </p>
+              <div>
+                <h5 key={id}>
+                  คะแนนที่ได้ : {attributes.result}
+                </h5>
+                <h5>
+                  คอมเม้น : {attributes.comment}
+                </h5>
+              </div>
             ))}
           </div>
         }

@@ -19,7 +19,7 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`, 
+        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
         // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
       },
     };
@@ -59,27 +59,13 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
   return (
     <div>
       {console.log(data)}
-      <div className="button-container">
-        <div className="userhead">
-          {dataname.name}
+      <div className="head" >
+        <div style={{ margin: "60px" }}>
+          รายวิชา
         </div>
-
-        <button className="button"></button>
-
-        <button className="button"></button>
-
-        <button className="button" onClick={handleLogout}>
+        <button className="button" onClick={handleLogout} style={{ margin: "60px" }}>
           Logout
         </button>
-      </div>
-
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "20px",
-        fontSize: "1.5cm"
-      }}>
-        รายวิชา
       </div>
 
       <div className="cards-container" style={{ margin: '20px' }}>
@@ -97,7 +83,7 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
                     : "rgba(0, 60, 113, 0.05)",
                 cursor: "pointer",
                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-              }} 
+              }}
             >
               <Card.Body>
                 <Card.Title>

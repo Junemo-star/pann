@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, CardBody, Form, FormGroup } from "react-bootstrap";
+import { Card, CardBody, Form, FormGroup, Modal } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
+import StaticExample from './editpage';
 
 const AddEventForm = () => {
     const navigate = useNavigate()
@@ -13,6 +14,7 @@ const AddEventForm = () => {
     const [datacouse, setDatacouse] = useState([]);
 
     const [data, setData] = useState('');
+    const [modal, setModal] = useState(false)
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
@@ -82,17 +84,22 @@ const AddEventForm = () => {
         navigate('/stuff');
     };
 
+    const edit = () => {
+        console.log(modal)
+        setModal(true)
+    }
+
     return (
         <div>
             <div className='head'>
-                <div style={{margin: "60px"}}>
+                <div style={{ margin: "60px" }}>
                     ระบบเพิ่มอีเว้น
                 </div>
-                
-                <button className="button" style={{margin: "60px"}} onClick={handleGoBack}>
+
+                <button className="button" style={{ margin: "60px" }} onClick={handleGoBack}>
                     back
                 </button>
-                
+
             </div>
 
             <Card style={{ margin: '20px' }}>
@@ -142,21 +149,22 @@ const AddEventForm = () => {
                 <button onClick={() => upload()}>เพิ่มคะแนน</button>
             </div>
 
-            {console.log(data)}
             {data && data.map(({ id, attributes }) => (
                 <Card key={id} style={{ margin: '20px' }} className='ol-md-4 mb-4'>
                     <Card.Body>
-                        <Card.Title>
+                        <Card.Title style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" }}>
                             <div>
                                 <h3>{attributes.name}</h3>
-                                {attributes.course.data.attributes.subject}
+                                {attributes.course.data.attributes.subject}<br />
+                                {new Date(attributes.datetime).toLocaleString()}
+                            </div>
+                            <div>
+                                <StaticExample id={id}/>
                             </div>
                         </Card.Title>
                     </Card.Body>
                 </Card>
             ))}
-
-
 
         </div>
     );
