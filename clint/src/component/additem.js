@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, CardBody, Form, FormGroup, Modal } from "react-bootstrap";
+import { Card, CardBody, Form, FormGroup, Modal , Button} from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import StaticExample from './editpage';
+import Deleteevent from './deletepage';
 
 const AddEventForm = () => {
     const navigate = useNavigate()
@@ -134,7 +135,7 @@ const AddEventForm = () => {
                     </FormGroup>
 
                     <div>
-                        <button type="submit">Add Event</button>
+                        <Button variant="success" type="submit">Add Event</Button>
                     </div>
                 </Form>
             </Card>
@@ -146,7 +147,7 @@ const AddEventForm = () => {
                 justifyContent: "space-between"
             }}>
                 <h2 >Event</h2>
-                <button onClick={() => upload()}>เพิ่มคะแนน</button>
+                <Button variant="success" onClick={() => upload()}>เพิ่มคะแนน</Button>
             </div>
 
             {data && data.map(({ id, attributes }) => (
@@ -158,9 +159,16 @@ const AddEventForm = () => {
                                 {attributes.course.data.attributes.subject}<br />
                                 {new Date(attributes.datetime).toLocaleString()}
                             </div>
-                            <div>
-                                <StaticExample id={id}/>
+
+                            <div style={{ display: 'flex', alignItems: "center" }}>
+                                <div style={{ marginRight: '10px' }}>
+                                    <Deleteevent id={id} />
+                                </div>
+                                <div>
+                                    <StaticExample id={id}/>    
+                                </div>    
                             </div>
+
                         </Card.Title>
                     </Card.Body>
                 </Card>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardBody, Form, FormGroup } from "react-bootstrap";
+import { Card, CardBody, Form, FormGroup , Button} from "react-bootstrap";
 
 const UploadFile = () => {
   const [excelData, setExcelData] = useState(null);
@@ -159,9 +159,9 @@ const UploadFile = () => {
 
         </Form>
 
-        <button onClick={postToStrapi} disabled={!excelData} style={{ width: "400px", margin: "20px" }}>
+        <Button variant="success" onClick={postToStrapi} disabled={!excelData} style={{ width: "400px", margin: "20px" }}>
           ยืนยัน
-        </button>
+        </Button>
       </Card >
     </div>
   );

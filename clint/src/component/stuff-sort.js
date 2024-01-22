@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Card, Form, FormControl } from "react-bootstrap";
+import { Card, Form, FormControl, Button } from "react-bootstrap";
 import "../css/style.css"
 import "../css/table.css"
 import { useNavigate } from 'react-router-dom'
+import { Spin } from 'antd';
 
 function StuffpageSort() {
   const navigate = useNavigate()
@@ -17,6 +18,8 @@ function StuffpageSort() {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [ShowAddModal, setShowAddModal] = useState(false);
   const [search, setSearch] = useState('')
+
+  const [isspin, setIsspin] = useState(true)
 
   console.log(search)
 
@@ -39,6 +42,8 @@ function StuffpageSort() {
         .then(({ data }) => setDataevent(data.data))
         .catch((error) => setError(error));
     }
+
+    setIsspin(false)
   }, [selectedSubject]);
 
   if (error) {
@@ -80,6 +85,7 @@ function StuffpageSort() {
       .catch(error => {
         console.error('Error fetching data:', error);
       });
+    
   }
 
 /*   const up = () => {
@@ -114,7 +120,7 @@ function StuffpageSort() {
   }
 
   return (
-    <div>
+    <Spin spinning={isspin}>
       <div className="head">
         <div style={{margin: "20px"}}>
           ระบบประกาศคะแนน(Admin)
@@ -147,10 +153,10 @@ function StuffpageSort() {
       </Card>
 
       <div className="backposition" style={{ margin: '20px' }}>
-        <button onClick={() => add()}>เพิ่มข้อมูล</button>
-        <button onClick={() => showpointstudent()} style={{ width: '3cm' }}>View</button>
+        <Button variant="success" onClick={() => add()}>เพิ่มข้อมูล</Button>
+        <Button variant="success" onClick={() => showpointstudent()} style={{ width: '3cm' }}>View</Button>
       </div>
-
+      
       <div>
         <Card style={{ margin: '20px' }}>
           {showyet && show && show.length > 0 ? (
@@ -188,7 +194,7 @@ function StuffpageSort() {
                       <td>{attributes.result}</td>
                       <td>{attributes.comment}</td>
                       <td>{attributes.seedata}</td>
-                      <td><button onClick={() => deleted(id)}>ลบ</button></td>
+                      <td><Button variant="danger" onClick={() => deleted(id)}>ลบ</Button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -204,7 +210,7 @@ function StuffpageSort() {
         </Card>
       </div>
 
-    </div>
+    </Spin>
   );
 }
 

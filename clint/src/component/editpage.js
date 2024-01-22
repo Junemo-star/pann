@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import { Form, FormGroup, Modal } from "react-bootstrap";
+import { Form, FormGroup, Modal} from "react-bootstrap";
 
 function StaticExample({ id }) {
     const [modal, setModal] = useState(false);
@@ -52,7 +52,7 @@ function StaticExample({ id }) {
 
     return (
         <div>
-            <button onClick={() => setModal(true)}>แก้ไข</button>
+            <Button variant="warning" onClick={() => setModal(true)}>แก้ไข</Button>
 
             <Modal show={modal} onHide={() => setModal(false)}>
                 <Modal.Header closeButton>
