@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardBody, Form, FormGroup , Button} from "react-bootstrap";
+import { Card, CardBody, Form, FormGroup, Button } from "react-bootstrap";
 
 const UploadFile = () => {
   const [excelData, setExcelData] = useState(null);
@@ -45,7 +45,6 @@ const UploadFile = () => {
           'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
         }
       });
-      console.log(checkid);
 
       const filteredEmails = checkid.data.filter((item) =>
         item.email.match(/^\d{2}/)
@@ -56,18 +55,43 @@ const UploadFile = () => {
         email: item.email,
       }));
       setStdid(filteredstdid);
-      console.log(filteredstdid);
+
+      const entriesInEvent = await axios.get(`http://localhost:1337/api/events/${eventcouse}?populate=entries`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+        },
+      });
+
+      console.log(entriesInEvent);
+
+      // ถ้ามี entries ในอีเว้นที่ถูกเลือก
+      if (entriesInEvent.data.data.attributes.entries.data.length > 0) {
+        const confirmDelete = window.confirm('อีเว้นนี้มีข้อมูลคะแนนอยู่แล้ว คุณต้องการลบข้อมูลเดิมทั้งหมดหรือไม่?');
+        if (confirmDelete) {
+          // ลบ entries ทั้งหมดในอีเว้น
+          for (const entry of entriesInEvent.data.data.attributes.entries.data) {
+            await axios.delete(`http://localhost:1337/api/entries/${entry.id}`, {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+              },
+            });
+          }
+        } else {
+          // ถ้าผู้ใช้ไม่ต้องการลบข้อมูล ให้ยกเลิก Post
+          return;
+        }
+      }
 
       for (const excelRow of excelData) {
         const studentId = excelRow[2];
-
+  
         const matchedUser = filteredEmails.find(
           (item) => item.email.slice(0, 3) === studentId.toString()
         );
-
+  
         if (matchedUser) {
           const userId = matchedUser.id;
-
+  
           const response = await axios.post('http://localhost:1337/api/entries',
             {
               data: {
@@ -83,7 +107,7 @@ const UploadFile = () => {
               }
             }
           );
-
+  
           console.log('Post to Strapi successful:', response.data);
           setPostSuccess(true);
         }
@@ -118,9 +142,10 @@ const UploadFile = () => {
   }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
-  const choose = (event) => {
+  const choose = async (event) => {
     const selectedCourseId = event.target.value;
     setEventcouse(selectedCourseId);
+
   }
 
   const handleGoBack = () => {
