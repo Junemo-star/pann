@@ -5,6 +5,7 @@ import "../css/style.css"
 import "../css/table.css"
 import { useNavigate } from 'react-router-dom'
 import { Spin } from 'antd';
+import { useAuth } from "./AuthContext";
 
 function StuffpageSort() {
   const navigate = useNavigate()
@@ -20,10 +21,18 @@ function StuffpageSort() {
   const [search, setSearch] = useState('')
 
   const [isspin, setIsspin] = useState(true)
-
-  console.log(search)
+  const { userRole } = useAuth();
 
   useEffect(() => {
+
+    if (userRole !== 'stuff') {
+      // Remove JWT Token from Local Storage
+      window.localStorage.removeItem("jwtToken");
+      // Clear Authorization Header in Axios Defaults
+      axios.defaults.headers.common.Authorization = "";
+      // Navigate to the "/" path (adjust this if using a different routing library)
+      navigate("/");
+    }
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
       headers: {

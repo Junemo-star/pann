@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardBody, Form, FormGroup, Button } from "react-bootstrap";
+import { useAuth } from './AuthContext';
 
 const UploadFile = () => {
   const [excelData, setExcelData] = useState(null);
@@ -13,6 +14,8 @@ const UploadFile = () => {
   const [error, setError] = useState(null);
   const [datacouse, setDatacouse] = useState([]);
   const [eventcouse, setEventcouse] = useState('');
+
+  const { userRole } = useAuth();
 
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
@@ -120,6 +123,16 @@ const UploadFile = () => {
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
+
+    if (userRole !== 'stuff') {
+      // Remove JWT Token from Local Storage
+      window.localStorage.removeItem("jwtToken");
+      // Clear Authorization Header in Axios Defaults
+      axios.defaults.headers.common.Authorization = "";
+      // Navigate to the "/" path (adjust this if using a different routing library)
+      navigate("/");
+    }
+    
     if (postSuccess) {
       setPostSuccess(false);
       //window.location.reload();
@@ -136,6 +149,7 @@ const UploadFile = () => {
       .catch((error) => setError(error));
 
   }, [postSuccess]);
+
   if (error) {
     // Print errors if any
     return <div>An error occured: {error.message}</div>;

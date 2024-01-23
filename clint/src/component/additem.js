@@ -4,6 +4,7 @@ import { Card, CardBody, Form, FormGroup, Modal , Button} from "react-bootstrap"
 import { useNavigate } from 'react-router-dom';
 import StaticExample from './editpage';
 import Deleteevent from './deletepage';
+import { useAuth } from './AuthContext';
 
 const AddEventForm = () => {
     const navigate = useNavigate()
@@ -17,8 +18,19 @@ const AddEventForm = () => {
     const [data, setData] = useState('');
     const [modal, setModal] = useState(false)
 
+    const { userRole } = useAuth();
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
+        if (userRole !== 'stuff') {
+            // Remove JWT Token from Local Storage
+            window.localStorage.removeItem("jwtToken");
+            // Clear Authorization Header in Axios Defaults
+            axios.defaults.headers.common.Authorization = "";
+            // Navigate to the "/" path (adjust this if using a different routing library)
+            navigate("/");
+        }
+
         //เก็บข้อมูล jwt ที่ได้จากการ login
         const config = {
             headers: {

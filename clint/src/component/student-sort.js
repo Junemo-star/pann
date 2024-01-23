@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/style.css'
 import { Container, Row, Col, CardGroup } from "react-bootstrap";
+import { useAuth } from "./AuthContext";
 
 function StudentSort() {   //ชื่อฟังก์ชั่นควรเป็นตัวใหญ่
   const [error, setError] = useState(null);
@@ -15,7 +16,19 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
   const [hoverr, setHoverr] = useState(null)
   const navigate = useNavigate()      //N a v i g a t e 
 
+  const { userRole } = useAuth();
+
   useEffect(() => {
+   
+    if (userRole !== 'student') {
+      // Remove JWT Token from Local Storage
+      window.localStorage.removeItem("jwtToken");
+      // Clear Authorization Header in Axios Defaults
+      axios.defaults.headers.common.Authorization = "";
+      // Navigate to the "/" path (adjust this if using a different routing library)
+      navigate("/");
+    }
+
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
       headers: {
@@ -32,7 +45,10 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
     axios.get("http://localhost:1337/api/users/me", config)
       .then(({ data }) => setDataname(data))
       .catch((error) => console.log(error));
+
   }, []);
+
+  
 
   if (error) {
     // Print errors if any
@@ -58,7 +74,6 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
 
   return (
     <div>
-      {console.log(data)}
       <div className="head" >
         <div style={{ margin: "60px" }}>
           รายวิชา

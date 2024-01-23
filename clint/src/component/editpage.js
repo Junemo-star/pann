@@ -18,7 +18,7 @@ function StaticExample({ id }) {
         }).then(({ data }) => {
             setDatacouse(data.data);
             setEventName(data.data?.attributes?.name || '');
-            setEventDateTime(new Date(data.data?.attributes?.datetime).toLocaleString());
+            setEventDateTime(data.data?.attributes?.datetime);
             setEventDescribtion(data.data?.attributes?.description || '');
         }).catch((error) => console.log(error));
 
@@ -68,11 +68,12 @@ function StaticExample({ id }) {
                                 placeholder={datacouse?.attributes?.name}
                                 onChange={(e) => setEventName(e.target.value)}
                                 style={{ width: '200px' }}
+                                value={eventName}
                             />
                         </FormGroup>
 
                         <FormGroup>
-                            <Form.Label>เวลา {new Date(datacouse?.attributes?.datetime).toLocaleString()}</Form.Label>
+                            <Form.Label>เวลา(หากต้องการเวลาเดิม ไม่ต้องเลือก)</Form.Label>
                             <Form.Control
                                 type="datetime-local"
                                 value={eventDateTime}

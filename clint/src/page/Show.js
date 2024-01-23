@@ -6,6 +6,7 @@ import '../css/style.css'
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useAuth } from "../component/AuthContext";
 
 const Showinfo = () => {
   const user = localStorage.getItem('usern')
@@ -20,6 +21,7 @@ const Showinfo = () => {
   const { courseName } = useParams()
 
   const [checksee, setChecksee] = useState([])
+  const { userRole } = useAuth();
 
   const handleGoBack = () => {
     navigate('/student');
@@ -27,6 +29,7 @@ const Showinfo = () => {
 
   //////////////////////////////////////////////////////
   useEffect(() => {
+
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
       headers: {
@@ -44,7 +47,15 @@ const Showinfo = () => {
         setData(filteredData)
       })
       .catch((error) => setError(error));
-      
+
+    if (userRole !== 'student') {
+      // Remove JWT Token from Local Storage
+      window.localStorage.removeItem("jwtToken");
+      // Clear Authorization Header in Axios Defaults
+      axios.defaults.headers.common.Authorization = "";
+      // Navigate to the "/" path (adjust this if using a different routing library)
+      navigate("/");
+    }
   }, []);
 
   if (error) {
@@ -66,8 +77,8 @@ const Showinfo = () => {
       <div className="head" style={{ marginBottom: "20px" }}>
         <div style={{ margin: "60px" }}>
           ประกาศคะแนน
-        </div> 
-        <button className="button" onClick={handleGoBack} style={{ margin: "60px" }}> 
+        </div>
+        <button className="button" onClick={handleGoBack} style={{ margin: "60px" }}>
           back
         </button>
       </div>
@@ -130,7 +141,7 @@ const Showinfo = () => {
             </Link>
           ))
         )}
-        3
+
         <MyVerticallyCenteredModal
           show={modalShow}
           onHide={() => setModalShow(false)}
@@ -160,8 +171,7 @@ function MyVerticallyCenteredModal(props) {
       },
     };
 
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
-      courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
       .then(({ data }) => {
         const filteredData = data.data.filter(item =>
           item.attributes.event.data !== null &&
@@ -191,6 +201,8 @@ function MyVerticallyCenteredModal(props) {
         window.location.reload(); // รีเฟรชหน้าเว็บ
       })
       .catch((error) => console.error(error));
+
+    console.log("comfirm")
   }
 
   return (

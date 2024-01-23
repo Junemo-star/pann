@@ -4,12 +4,14 @@ import { Form, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../css/button.css'
+import { useAuth } from '../component/AuthContext';
 
 const LoginForm = () => {
     const navigate = useNavigate()
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const [submitEnabled, setSubmitEnabled] = useState(true);
+    const { setRole } = useAuth();
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -47,6 +49,7 @@ const LoginForm = () => {
             result = await axios.get('http://localhost:1337/api/users/me?populate=role', config)
 
             if (result.data.role) {
+                setRole(result.data.role.name);
                 if (result.data.role.name === 'student') {
                     navigate('/student');
                 }
@@ -90,9 +93,9 @@ const LoginForm = () => {
                         />
                     </Form.Group>
 
-                    <button class="custom-button">
-                        <div class="svg-wrapper-1">
-                            <div class="svg-wrapper">
+                    <button className="custom-button">
+                        <div className="svg-wrapper-1">
+                            <div className="svg-wrapper">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"

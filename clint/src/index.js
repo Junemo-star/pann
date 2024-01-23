@@ -4,13 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {createBrowserRouter,RouterProvider,} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, } from "react-router-dom";
 import StudentPage from './page/Studentpage';
 import Stuffpage from './page/Stuffpage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Showinfo from './page/Show';
 import AddEventForm from './component/additem';
 import UploadFile from './component/point';
+import { AuthProvider  } from './component/AuthContext';
 
 /////////////---test---//////////////////
 import test from './page/Testcode';
@@ -19,14 +20,14 @@ import test from './page/Testcode';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
+    element: <App />,
   },
 
   {
     path: "/student",
     element: <StudentPage />,
   },
-  
+
   {
     path: "/stuff",
     element: <Stuffpage />,
@@ -34,11 +35,11 @@ const router = createBrowserRouter([
 
   {
     path: "/student/:courseName",
-    element: <Showinfo/>,
+    element: <Showinfo />,
   },
 
   // หากต้องการเทสให้ import ฟังชั่นเข้ามา พร้อมลิ้งที่ element
-  { 
+  {
     path: "/test",
     element: <test></test>
   },
@@ -58,9 +59,11 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-     <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
-  
+
 );
 
 // If you want to start measuring performance in your app, pass a function
