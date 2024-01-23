@@ -49,7 +49,11 @@ const LoginForm = () => {
             result = await axios.get('http://localhost:1337/api/users/me?populate=role', config)
 
             if (result.data.role) {
-                setRole(result.data.role.name);
+                
+                localStorage.setItem('userRole', result.data.role.name)
+                
+                setRole(localStorage.getItem('userRole'));
+
                 if (result.data.role.name === 'student') {
                     navigate('/student');
                 }

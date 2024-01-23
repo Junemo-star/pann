@@ -1,3 +1,4 @@
+//student-sort.js
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Stack from 'react-bootstrap/Stack';    //เอาไว้ตกแต่ง
@@ -16,18 +17,14 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
   const [hoverr, setHoverr] = useState(null)
   const navigate = useNavigate()      //N a v i g a t e 
 
-  const { userRole } = useAuth();
+  const { userRole, setRole } = useAuth();
 
   useEffect(() => {
-   
-    if (userRole !== 'student') {
-      // Remove JWT Token from Local Storage
-      window.localStorage.removeItem("jwtToken");
-      // Clear Authorization Header in Axios Defaults
-      axios.defaults.headers.common.Authorization = "";
-      // Navigate to the "/" path (adjust this if using a different routing library)
-      navigate("/");
-    }
+    
+  // ตรวจสอบว่า userRole เป็น 'student' หรือไม่
+  if (userRole !== 'student') {
+    navigate("/");
+  }
 
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
@@ -46,7 +43,7 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
       .then(({ data }) => setDataname(data))
       .catch((error) => console.log(error));
 
-  }, []);
+  }, [userRole]);
 
   
 

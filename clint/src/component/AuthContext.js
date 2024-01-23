@@ -1,14 +1,28 @@
 // AuthContext.js
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState(() => {
+    // ใช้ callback ในการกำหนดค่าเริ่มต้นจาก Local Storage
+    const storedRole = localStorage.getItem('userRole');
+    return storedRole || null;
+  });
 
   const setRole = (role) => {
     setUserRole(role);
+    // เมื่อมีการเปลี่ยนแปลง userRole, บันทึกลง Local Storage
+    localStorage.setItem('userRole', role);
   };
+
+  // ตรวจสอบ Local Storage เมื่อ App โหลด
+  useEffect(() => {
+    const storedRole = localStorage.getItem('userRole');
+    if (storedRole) {
+      setUserRole(storedRole);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ userRole, setRole }}>

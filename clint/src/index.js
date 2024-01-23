@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Showinfo from './page/Show';
 import AddEventForm from './component/additem';
 import UploadFile from './component/point';
-import { AuthProvider  } from './component/AuthContext';
+import { AuthProvider } from './component/AuthContext';
 
 /////////////---test---//////////////////
 import test from './page/Testcode';
@@ -60,7 +60,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider>
+
       <RouterProvider router={router} />
+    
     </AuthProvider>
   </React.StrictMode>
 
