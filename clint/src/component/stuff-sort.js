@@ -6,6 +6,7 @@ import "../css/table.css"
 import { useNavigate } from 'react-router-dom'
 import { Spin } from 'antd';
 import { useAuth } from "./AuthContext";
+import { message } from 'antd';
 
 function StuffpageSort() {
   const navigate = useNavigate()
@@ -19,6 +20,9 @@ function StuffpageSort() {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [ShowAddModal, setShowAddModal] = useState(false);
   const [search, setSearch] = useState('')
+
+  const [username, setUsername] = useState([])
+  const [check, setCheck] = useState([])
 
   const [isspin, setIsspin] = useState(true)
   const { userRole } = useAuth();
@@ -44,6 +48,10 @@ function StuffpageSort() {
     //เรียกข้อมูล
     axios.get("http://localhost:1337/api/courses", config)
       .then(({ data }) => setDatacouse(data.data))
+      .catch((error) => setError(error));
+
+    axios.get("http://localhost:1337/api/users/me", config)
+      .then(({ data }) => setUsername(data.username))
       .catch((error) => setError(error));
 
     if (selectedSubject !== '') {
@@ -78,8 +86,7 @@ function StuffpageSort() {
 
   const showpointstudent = () => {
     setShowyet(true)
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
-      selectedValue}&populate[owner]=*&populate[event][filters][name]=${selectedEvent}`, {
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${selectedValue}&populate[owner]=*&populate[event][filters][name]=${selectedEvent}`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
       }
@@ -94,12 +101,8 @@ function StuffpageSort() {
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-    
-  }
 
-/*   const up = () => {
-    navigate('/upload')
-  } */
+  }
 
   const add = () => {
     navigate('/add')
@@ -114,30 +117,61 @@ function StuffpageSort() {
     navigate("/");
   }
 
-  const deleted = (itemId) => {
-    console.log(itemId)
-
-    const updatedData = show.filter(item => item.id !== itemId);
-    setShow(updatedData)
-    
-    axios.delete(`http://localhost:1337/api/entries/${itemId}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+  const deleted = async (itemId) => {
+    try {
+      const { data } = await axios.get(`http://localhost:1337/api/entries/${itemId}?populate[event][populate][course][populate][users][filters][username][$eq]=${username}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+        }
+      });
+  
+      const checkData = data.data.attributes.event.data.attributes.course.data.attributes.users.data;
+  
+      console.log(checkData.length);
+  
+      if (checkData.length !== 0) {
+        const updatedData = show.filter(item => item.id !== itemId);
+        setShow(updatedData);
+  
+        await axios.delete(`http://localhost:1337/api/entries/${itemId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+          }
+        });
+  
+        console.log("Success");
+      } else {
+        message.error("Can't delete")
       }
-    }).then(console.log("Success")).catch((error) => console.log(error))
-
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
     <Spin spinning={isspin}>
-      <div className="head">
-        <div style={{margin: "20px"}}>
-          ระบบประกาศคะแนน(Admin)
+      <nav className="navbar navbar-light" style={{ display: "flex", justifyContent: "space-between", backgroundColor: "green" }}>
+        <div style={{ display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center", color: "white" }}>
+          <a className="navbar-brand" style={{ backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} className="d-inline-block align-top" alt="" />
+          </a>
+          <a style={{ marginRight: "20px" }}>
+            <h4>ระบบประกาศคะแนน(admin)</h4>
+          </a>
+          <a style={{ marginRight: "20px", color: "yellow" }}>
+            <h4>ดูคะแนน</h4>
+          </a>
+          <a style={{ marginRight: "20px" }}>
+            <h4>เพิ่มอีเว้น</h4>
+          </a>
+          <a>
+            <h4>เพิ่มคะแนน</h4>
+          </a>
         </div>
-        <button className="button" onClick={handleLogout} style={{margin: "60px"}}>
-          Logout
-        </button>
-      </div>
+        <div style={{ marginRight: "50px", fontSize: "20px", color: "yellow" }}>
+          <button className="button" onClick={handleLogout} style={{ color: "white" }}>Logout</button>
+        </div>
+      </nav>
 
       <Card style={{ margin: '20px', display: 'flex' }}>
         <Form.Group style={{ display: 'flex' }}>
@@ -165,7 +199,7 @@ function StuffpageSort() {
         <Button variant="success" onClick={() => add()}>เพิ่มข้อมูล</Button>
         <Button variant="success" onClick={() => showpointstudent()} style={{ width: '3cm' }}>View</Button>
       </div>
-      
+
       <div>
         <Card style={{ margin: '20px' }}>
           {showyet && show && show.length > 0 ? (
@@ -193,19 +227,19 @@ function StuffpageSort() {
 
                 <tbody>
                   {show.filter(({ id, attributes }) => {
-                    return search === '' 
-                      ? attributes 
+                    return search === ''
+                      ? attributes
                       : attributes.owner.data.attributes.username.includes(search);
                   })
-                  .map(({ id, attributes }) => (
-                    <tr key={id}>
-                      <td>{attributes.owner.data.attributes.username}</td>
-                      <td>{attributes.result}</td>
-                      <td>{attributes.comment}</td>
-                      <td>{attributes.seedata}</td>
-                      <td><Button variant="danger" onClick={() => deleted(id)}>ลบ</Button></td>
-                    </tr>
-                  ))}
+                    .map(({ id, attributes }) => (
+                      <tr key={id}>
+                        <td>{attributes.owner.data.attributes.username}</td>
+                        <td>{attributes.result}</td>
+                        <td>{attributes.comment}</td>
+                        <td>{attributes.seedata}</td>
+                        <td><Button variant="danger" onClick={() => deleted(id)}>ลบ</Button></td>
+                      </tr>
+                    ))}
                 </tbody>
 
               </table>

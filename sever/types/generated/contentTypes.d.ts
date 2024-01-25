@@ -381,6 +381,11 @@ export interface ApiCourseCourse extends Schema.CollectionType {
       'oneToMany',
       'api::event.event'
     >;
+    users: Attribute.Relation<
+      'api::course.course',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -845,6 +850,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'api::entry.entry'
     >;
     name: Attribute.String;
+    course: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToOne',
+      'api::course.course'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

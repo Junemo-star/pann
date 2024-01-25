@@ -74,14 +74,25 @@ const Showinfo = () => {
 
   return (
     <div>
-      <div className="head" style={{ marginBottom: "20px" }}>
-        <div style={{ margin: "60px" }}>
-          ประกาศคะแนน
+      <nav className="navbar navbar-light" style={{display: "flex", justifyContent: "space-between", backgroundColor: "green" }}>
+        <div style={{display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center" , color: "white"}}>
+          <a className="navbar-brand" style={{ backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} class="d-inline-block align-top" alt="" />
+          </a>
+          <a style={{marginRight: "20px"}}>
+            <h4>ระบบประกาศคะแนน</h4>
+          </a>
+          <a style={{marginRight: "20px"}}>
+            <h4>รายวิชา</h4>
+          </a>
+          <a style={{color: "yellow"}}>
+            <h4>คะแนน</h4>
+          </a>
         </div>
-        <button className="button" onClick={handleGoBack} style={{ margin: "60px" }}>
-          back
-        </button>
-      </div>
+        <div style={{marginRight: "30px", fontSize: "20px"}}>
+          <button className="button" onClick={handleGoBack} style={{ color: "white" }}>Back</button>
+        </div>
+      </nav>
 
       <div className="cards-container">
         {data.length === 0 ? (
@@ -171,14 +182,14 @@ function MyVerticallyCenteredModal(props) {
       },
     };
 
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
+      courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
       .then(({ data }) => {
         const filteredData = data.data.filter(item =>
           item.attributes.event.data !== null &&
           item.attributes.owner.data !== null
         );
         setData(filteredData);
-
         // บันทึกข้อมูลใน localStorage
         localStorage.setItem('myData', JSON.stringify(filteredData));
       })
@@ -245,7 +256,7 @@ function MyVerticallyCenteredModal(props) {
           ) : (
             <Button onClick={() => see(data[0].id)} disabled>รับทราบ</Button>
           )}
-        <Button onClick={props.onHide}>Close</Button>
+        <Button variant="danger" onClick={props.onHide}>Close</Button>
       </Modal.Footer>
     </Modal>
   );

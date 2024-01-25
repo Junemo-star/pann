@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, CardBody, Form, FormGroup, Modal , Button} from "react-bootstrap";
+import { Card, CardBody, Form, FormGroup, Modal, Button } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import StaticExample from './editpage';
 import Deleteevent from './deletepage';
@@ -17,6 +17,7 @@ const AddEventForm = () => {
 
     const [data, setData] = useState('');
     const [modal, setModal] = useState(false)
+    const [test, setTest] = useState([])
 
     const { userRole } = useAuth();
 
@@ -44,6 +45,10 @@ const AddEventForm = () => {
 
         axios.get("http://localhost:1337/api/events?populate=course", config)
             .then(({ data }) => setData(data.data))
+            .catch((error) => setError(error));
+
+        axios.get("http://localhost:1337/api/users/me?populate=course", config)
+            .then(({ data }) => setTest([data.course]))
             .catch((error) => setError(error));
 
     }, []);  // ในที่นี้ให้เรียกในที่ render แรกเท่านั้น
@@ -104,16 +109,29 @@ const AddEventForm = () => {
 
     return (
         <div>
-            <div className='head'>
-                <div style={{ margin: "60px" }}>
-                    ระบบเพิ่มอีเว้น
+            {console.log(test)}
+            <nav className="navbar navbar-light " style={{ display: "flex", justifyContent: "space-between", backgroundColor: "green" }}>
+                <div style={{ display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center" ,color: "white"}}>
+                    <a className="navbar-brand" style={{backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px"}}>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} className="d-inline-block align-top" alt="" />
+                    </a>
+                    <a style={{ marginRight: "20px" }}>
+                        <h4>ระบบประกาศคะแนน(admin)</h4>
+                    </a>
+                    <a style={{ marginRight: "20px" }}>
+                        <h4>ดูคะแนน</h4>
+                    </a>
+                    <a style={{ marginRight: "20px", color: "yellow" }}>
+                        <h4>เพิ่มอีเว้น</h4>
+                    </a>
+                    <a>
+                        <h4>เพิ่มคะแนน</h4>
+                    </a>
                 </div>
-
-                <button className="button" style={{ margin: "60px" }} onClick={handleGoBack}>
-                    back
-                </button>
-
-            </div>
+                <div style={{ marginRight: "30px", fontSize: "20px" }}>
+                    <button className="button" onClick={handleGoBack} style={{color: "white"}}>Back</button>
+                </div>
+            </nav>
 
             <Card style={{ margin: '20px' }}>
                 <Form onSubmit={handleSubmit} style={{ display: "flex", margin: "15px", justifyContent: 'space-between' }}>
@@ -127,9 +145,8 @@ const AddEventForm = () => {
                     <Form.Group style={{ marginRight: "15px" }}>
                         <Form.Label>เลือกวิชา</Form.Label>
                         <Form.Select onChange={choose} style={{ width: '250px' }}>
-                            <option>......</option>
-                            {datacouse.map(({ id, attributes }) => (
-                                <option key={id} value={id}>{attributes.subject}</option>
+                            {test.map((item) => (
+                                <option key={item.id} value={item.id}>{item.subject}</option>
                             ))}
                         </Form.Select>
                     </Form.Group>
@@ -177,8 +194,8 @@ const AddEventForm = () => {
                                     <Deleteevent id={id} />
                                 </div>
                                 <div>
-                                    <StaticExample id={id}/>    
-                                </div>    
+                                    <StaticExample id={id} />
+                                </div>
                             </div>
 
                         </Card.Title>

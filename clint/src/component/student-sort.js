@@ -5,7 +5,6 @@ import Stack from 'react-bootstrap/Stack';    //เอาไว้ตกแต�
 import { useNavigate, Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/style.css'
 import { Container, Row, Col, CardGroup } from "react-bootstrap";
 import { useAuth } from "./AuthContext";
@@ -20,11 +19,11 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
   const { userRole, setRole } = useAuth();
 
   useEffect(() => {
-    
-  // ตรวจสอบว่า userRole เป็น 'student' หรือไม่
-  if (userRole !== 'student') {
-    navigate("/");
-  }
+
+    // ตรวจสอบว่า userRole เป็น 'student' หรือไม่
+    if (userRole !== 'student') {
+      navigate("/");
+    }
 
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
@@ -45,7 +44,7 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
 
   }, [userRole]);
 
-  
+
 
   if (error) {
     // Print errors if any
@@ -71,14 +70,34 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
 
   return (
     <div>
-      <div className="head" >
+      <nav className="navbar navbar-light" style={{display: "flex", justifyContent: "space-between", backgroundColor: "green"}}>
+        <div style={{display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center", color: "white" }}>
+          <a className="navbar-brand" style={{ backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} class="d-inline-block align-top" alt="" />
+          </a>
+          <a style={{marginRight: "20px"}}>
+            <h4>ระบบประกาศคะแนน</h4>
+          </a>
+          <a style={{marginRight: "20px" , color: "yellow"}}>
+            <h4>รายวิชา</h4>
+          </a>
+          <a>
+            <h4>คะแนน</h4>
+          </a>
+        </div>
+        <div style={{marginRight: "50px", fontSize: "20px"}}>
+          <button className="button" onClick={handleLogout} style={{ color: "white" }}>Logout</button>
+        </div>
+      </nav>
+
+      {/*       <div className="head" >
         <div style={{ margin: "60px" }}>
           รายวิชา
         </div>
         <button className="button" onClick={handleLogout} style={{ margin: "60px" }}>
           Logout
         </button>
-      </div>
+      </div> */}
 
       <div className="cards-container" style={{ margin: '20px' }}>
         {data.map(({ id, attributes }) => (      //แสดงผลข้อมูล

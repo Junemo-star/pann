@@ -23,6 +23,12 @@
       "relation": "oneToMany",
       "target": "api::event.event",
       "mappedBy": "course"
+    },
+    "users": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "course"
     }
   }
 }

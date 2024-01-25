@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserRouter, RouterProvider, } from "react-router-dom";
 import StudentPage from './page/Studentpage';
 import Stuffpage from './page/Stuffpage';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Showinfo from './page/Show';
 import AddEventForm from './component/additem';
 import UploadFile from './component/point';

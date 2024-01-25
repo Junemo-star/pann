@@ -79,6 +79,12 @@
     },
     "name": {
       "type": "string"
+    },
+    "course": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::course.course",
+      "inversedBy": "users"
     }
   }
 }

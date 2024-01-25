@@ -1,9 +1,10 @@
 // SimpleLoginForm.js
 import React, { useState } from 'react';
-import { Form, Container } from 'react-bootstrap';
+import { Form, Container, Image } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../css/button.css'
+import '../css/login.css'
 import { useAuth } from '../component/AuthContext';
 
 const LoginForm = () => {
@@ -49,9 +50,9 @@ const LoginForm = () => {
             result = await axios.get('http://localhost:1337/api/users/me?populate=role', config)
 
             if (result.data.role) {
-                
+
                 localStorage.setItem('userRole', result.data.role.name)
-                
+
                 setRole(localStorage.getItem('userRole'));
 
                 if (result.data.role.name === 'student') {
@@ -72,32 +73,43 @@ const LoginForm = () => {
     };
 
     return (
-        <Container>
-            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="formBasicUsername">
+        <Container style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <div style={{ marginRight: "20px"}}>
+                <Image src="https://st2.depositphotos.com/48472442/45788/v/450/depositphotos_457880790-stock-illustration-man-working-laptop-vector-cartoon.jpg" roundedCircle />
+            </div>
+
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' , width: "300px"}}>
+                <Form onSubmit={handleSubmit} className="form_main" style={{width: "500px"}}>
+                    <p className="heading">Login</p>
+
+                    <Form.Group controlId="formBasicUsername" >
                         <Form.Label>Username</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter username"
-                            value={username}
-                            onChange={handleUsernameChange}
-                            required //จำเป็นต้องกรอก
-                        />
+                        <div className="position-relative">
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter username"
+                                value={username}
+                                onChange={handleUsernameChange}
+                                required
+                                className="inputContainer"
+                                style={{width: "300px"}}
+                            />
+                        </div>
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
-                        <Form.Label style={{marginTop: "10px"}}>Password</Form.Label>
+                        <Form.Label style={{ marginTop: "10px" }}>Password</Form.Label>
                         <Form.Control
                             type="password"
                             placeholder="Password"
                             value={password}
                             onChange={handlePasswordChange}
                             required
+                            style={{width: "300px"}}
                         />
                     </Form.Group>
 
-                    <button className="custom-button">
+                    <button className="custom-button" style={{width: "120px", height: "55px"}}>
                         <div className="svg-wrapper-1">
                             <div className="svg-wrapper">
                                 <svg
@@ -117,9 +129,6 @@ const LoginForm = () => {
                         <span>Send</span>
                     </button>
 
-                    {/* <Button variant="primary" type="submit" >
-                        Submit
-                    </Button> */}
                 </Form>
             </div>
         </Container>

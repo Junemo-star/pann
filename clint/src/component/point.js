@@ -87,14 +87,14 @@ const UploadFile = () => {
 
       for (const excelRow of excelData) {
         const studentId = excelRow[2];
-  
+
         const matchedUser = filteredEmails.find(
           (item) => item.email.slice(0, 3) === studentId.toString()
         );
-  
+
         if (matchedUser) {
           const userId = matchedUser.id;
-  
+
           const response = await axios.post('http://localhost:1337/api/entries',
             {
               data: {
@@ -110,7 +110,7 @@ const UploadFile = () => {
               }
             }
           );
-  
+
           console.log('Post to Strapi successful:', response.data);
           setPostSuccess(true);
         }
@@ -132,7 +132,7 @@ const UploadFile = () => {
       // Navigate to the "/" path (adjust this if using a different routing library)
       navigate("/");
     }
-    
+
     if (postSuccess) {
       setPostSuccess(false);
       //window.location.reload();
@@ -169,14 +169,28 @@ const UploadFile = () => {
   return (
     <div>
 
-      <div className='head'>
-        <div style={{ margin: "60px" }}>
-          ระบบเพิ่มคะแนน
+      <nav className="navbar navbar-light " style={{ display: "flex", justifyContent: "space-between", backgroundColor: "green" }}>
+        <div style={{ display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center", color: "white" }}>
+          <a className="navbar-brand" style={{ backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} class="d-inline-block align-top" alt="" />
+          </a>
+          <a style={{ marginRight: "20px" }}>
+            <h4>ระบบประกาศคะแนน(admin)</h4>
+          </a>
+          <a style={{ marginRight: "20px" }}>
+            <h4>ดูคะแนน</h4>
+          </a>
+          <a style={{ marginRight: "20px"}}>
+            <h4>เพิ่มอีเว้น</h4>
+          </a>
+          <a style={{ marginRight: "20px", color: "yellow" }}>
+            <h4>เพิ่มคะแนน</h4>
+          </a>
         </div>
-        <button className="button" style={{ margin: "60px" }} onClick={handleGoBack}>
-          back
-        </button>
-      </div>
+        <div style={{ marginRight: "30px", fontSize: "20px" }}>
+          <button className="button" onClick={handleGoBack} style={{ color: "white" }}>Back</button>
+        </div>
+      </nav>
 
       <Card style={{ margin: '20px', display: "flex", justifyContent: "center", alignItems: "center" }}>
         <Form style={{ margin: '20px', display: "flex" }}>
