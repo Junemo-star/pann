@@ -70,7 +70,7 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
 
   return (
     <div>
-      <nav className="navbar navbar-light" style={{display: "flex", justifyContent: "space-between", backgroundColor: "green"}}>
+      <nav className="navbar navbar-light" style={{display: "flex", justifyContent: "space-between", backgroundColor: "#80BCBD", height: "90px"}}>
         <div style={{display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center", color: "white" }}>
           <a className="navbar-brand" style={{ backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} class="d-inline-block align-top" alt="" />
@@ -78,7 +78,7 @@ function StudentSort() {   //ชื่อฟังก์ชั่นควรเ
           <a style={{marginRight: "20px"}}>
             <h4>ระบบประกาศคะแนน</h4>
           </a>
-          <a style={{marginRight: "20px" , color: "yellow"}}>
+          <a style={{marginRight: "20px" , color: "black"}}>
             <h4>รายวิชา</h4>
           </a>
           <a>

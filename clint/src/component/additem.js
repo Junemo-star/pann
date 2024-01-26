@@ -13,6 +13,7 @@ const AddEventForm = () => {
     const [eventDateTime, setEventDateTime] = useState('');
     const [eventdescribtion, setEventDescribtion] = useState('')
     const [error, setError] = useState(null);
+
     const [datacouse, setDatacouse] = useState([]);
 
     const [data, setData] = useState('');
@@ -39,10 +40,6 @@ const AddEventForm = () => {
             },
         };
 
-        axios.get("http://localhost:1337/api/courses", config)
-            .then(({ data }) => setDatacouse(data.data))
-            .catch((error) => setError(error));
-
         axios.get("http://localhost:1337/api/events?populate=course", config)
             .then(({ data }) => setData(data.data))
             .catch((error) => setError(error));
@@ -50,6 +47,10 @@ const AddEventForm = () => {
         axios.get("http://localhost:1337/api/users/me?populate=course", config)
             .then(({ data }) => setTest([data.course]))
             .catch((error) => setError(error));
+        
+        axios.get("http://localhost:1337/api/users/me?populate[course][populate]=events", config)
+            .then(({ data }) => setDatacouse(data.course.events))
+            .catch((error) => setError(error))
 
     }, []);  // ในที่นี้ให้เรียกในที่ render แรกเท่านั้น
 
@@ -109,8 +110,9 @@ const AddEventForm = () => {
 
     return (
         <div>
-            {console.log(test)}
-            <nav className="navbar navbar-light " style={{ display: "flex", justifyContent: "space-between", backgroundColor: "green" }}>
+            {console.log(datacouse)}
+            {console.log(data)}
+            <nav className="navbar navbar-light " style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#80BCBD", height: "90px"}}>
                 <div style={{ display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center" ,color: "white"}}>
                     <a className="navbar-brand" style={{backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px"}}>
                         <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} className="d-inline-block align-top" alt="" />
@@ -121,7 +123,7 @@ const AddEventForm = () => {
                     <a style={{ marginRight: "20px" }}>
                         <h4>ดูคะแนน</h4>
                     </a>
-                    <a style={{ marginRight: "20px", color: "yellow" }}>
+                    <a style={{ marginRight: "20px", color: "black" }}>
                         <h4>เพิ่มอีเว้น</h4>
                     </a>
                     <a>
@@ -129,7 +131,10 @@ const AddEventForm = () => {
                     </a>
                 </div>
                 <div style={{ marginRight: "30px", fontSize: "20px" }}>
-                    <button className="button" onClick={handleGoBack} style={{color: "white"}}>Back</button>
+                    <button className="button" onClick={handleGoBack} 
+                        style={{backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
+                        Back
+                    </button>
                 </div>
             </nav>
 
@@ -179,22 +184,21 @@ const AddEventForm = () => {
                 <Button variant="success" onClick={() => upload()}>เพิ่มคะแนน</Button>
             </div>
 
-            {data && data.map(({ id, attributes }) => (
-                <Card key={id} style={{ margin: '20px' }} className='ol-md-4 mb-4'>
+            {datacouse && datacouse.map((item) => (
+                <Card key={item.id} style={{ margin: '20px' }} className='ol-md-4 mb-4'>
                     <Card.Body>
                         <Card.Title style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" }}>
                             <div>
-                                <h3>{attributes.name}</h3>
-                                {attributes.course.data.attributes.subject}<br />
-                                {new Date(attributes.datetime).toLocaleString()}
+                                <h3>{item.name}</h3><br />
+                                {new Date(item.datetime).toLocaleString()}
                             </div>
 
                             <div style={{ display: 'flex', alignItems: "center" }}>
                                 <div style={{ marginRight: '10px' }}>
-                                    <Deleteevent id={id} />
+                                    <Deleteevent id={item.id} />
                                 </div>
                                 <div>
-                                    <StaticExample id={id} />
+                                    <StaticExample id={item.id} />
                                 </div>
                             </div>
 

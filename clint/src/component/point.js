@@ -138,14 +138,12 @@ const UploadFile = () => {
       //window.location.reload();
     }
 
-    axios.get("http://localhost:1337/api/events", {
+    axios.get("http://localhost:1337/api/users/me?populate[course][populate]=events", {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
       },
     })
-      .then(response => {
-        setDatacouse(response.data); // ที่นี่เราใช้ response.data ไม่ใช่ data.data
-      })
+      .then((response) => {setDatacouse(response.data.course.events)})
       .catch((error) => setError(error));
 
   }, [postSuccess]);
@@ -168,11 +166,12 @@ const UploadFile = () => {
 
   return (
     <div>
+      {console.log(datacouse)}
 
-      <nav className="navbar navbar-light " style={{ display: "flex", justifyContent: "space-between", backgroundColor: "green" }}>
+      <nav className="navbar navbar-light " style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#80BCBD", height: "90px" }}>
         <div style={{ display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center", color: "white" }}>
           <a className="navbar-brand" style={{ backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} class="d-inline-block align-top" alt="" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} className="d-inline-block align-top" alt="" />
           </a>
           <a style={{ marginRight: "20px" }}>
             <h4>ระบบประกาศคะแนน(admin)</h4>
@@ -183,12 +182,15 @@ const UploadFile = () => {
           <a style={{ marginRight: "20px"}}>
             <h4>เพิ่มอีเว้น</h4>
           </a>
-          <a style={{ marginRight: "20px", color: "yellow" }}>
+          <a style={{ marginRight: "20px", color: "black" }}>
             <h4>เพิ่มคะแนน</h4>
           </a>
         </div>
         <div style={{ marginRight: "30px", fontSize: "20px" }}>
-          <button className="button" onClick={handleGoBack} style={{ color: "white" }}>Back</button>
+          <button onClick={handleGoBack} className='button' 
+            style={{backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
+              Back
+          </button>
         </div>
       </nav>
 
@@ -199,8 +201,8 @@ const UploadFile = () => {
             <Form.Label>เลือกอีเว้น</Form.Label>
             <Form.Select onChange={choose} style={{ width: '250px' }}>
               <option>......</option>
-              {datacouse && datacouse?.data?.map((course) => (
-                <option key={course.id} value={course.id}>{course.attributes.name}</option>
+              {datacouse && datacouse?.map((course) => (
+                <option key={course.id} value={course.id}>{course.name}</option>
               ))}
             </Form.Select>
           </Form.Group>
