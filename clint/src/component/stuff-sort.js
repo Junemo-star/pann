@@ -4,9 +4,8 @@ import { Card, Form, FormControl, Button } from "react-bootstrap";
 import "../css/style.css"
 import "../css/table.css"
 import { useNavigate } from 'react-router-dom'
-import { Spin } from 'antd';
+import { Spin , message} from 'antd';
 import { useAuth } from "./AuthContext";
-import { message } from 'antd';
 
 function StuffpageSort() {
   const navigate = useNavigate()
@@ -25,6 +24,7 @@ function StuffpageSort() {
 
   const [isspin, setIsspin] = useState(true)
   const { userRole } = useAuth();
+  const { yourcourse } = useAuth();
 
   useEffect(() => {
 
@@ -167,7 +167,8 @@ function StuffpageSort() {
             <h4>เพิ่มคะแนน</h4>
           </a>
         </div>
-        <div style={{ marginRight: "50px", fontSize: "20px", color: "yellow" }}>
+        <div style={{ marginRight: "30px", fontSize: "20px", display: "flex", alignItems: "center"}}>
+          <h4 style={{color: "white"}}>อาจารย์ประจำวิชา {yourcourse}</h4>
           <button className="button" onClick={handleLogout} style={{ backgroundColor: "white", width: "120px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px"  }}>Logout</button>
         </div>
       </nav>
@@ -231,10 +232,12 @@ function StuffpageSort() {
                       : attributes.owner.data.attributes.username.includes(search);
                   })
                     .map(({ id, attributes }) => (
-                      <tr key={id}>
+                      <tr key={id} style={{fontSize: "20px"}}>
                         <td>{attributes.owner.data.attributes.username}</td>
                         <td>{attributes.result}</td>
-                        <td>{attributes.comment}</td>
+                        <td  style={{ color: attributes.comment === "N" ? 'red' : (attributes.comment === "P" ? 'blue' : 'green') }}>
+                          {attributes.comment}
+                        </td>
                         <td>{attributes.seedata}</td>
                         <td><Button variant="danger" onClick={() => deleted(id)}>ลบ</Button></td>
                       </tr>

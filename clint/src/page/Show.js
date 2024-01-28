@@ -1,15 +1,12 @@
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import Card from 'react-bootstrap/Card'
+import { Card, FormControl, Modal, Button} from 'react-bootstrap'
 import '../css/style.css'
-import React from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import { useAuth } from "../component/AuthContext";
+import { Spin } from 'antd';
 
 const Showinfo = () => {
-  const user = localStorage.getItem('usern')
   const navigate = useNavigate()
   const [modalShow, setModalShow] = React.useState(false);
 
@@ -20,8 +17,11 @@ const Showinfo = () => {
   const [hoverr, setHoverr] = useState(null)
   const { courseName } = useParams()
 
-  const [checksee, setChecksee] = useState([])
   const { userRole } = useAuth();
+  const [search, setSearch] = useState('')
+
+  const [dataname, setDataname] = useState([])
+  const [isspin, setIsspin] = useState(true)
 
   const handleGoBack = () => {
     navigate('/student');
@@ -30,7 +30,6 @@ const Showinfo = () => {
   //////////////////////////////////////////////////////
   useEffect(() => {
 
-    
     if (userRole !== 'student') {
       // Remove JWT Token from Local Storage
       window.localStorage.removeItem("jwtToken");
@@ -47,6 +46,9 @@ const Showinfo = () => {
         // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
       },
     };
+    axios.get("http://localhost:1337/api/users/me", config)
+    .then(({ data }) => setDataname(data.name))
+    .catch((error) => console.log(error));
 
     //เรียกข้อมูล
     axios.get(`http://localhost:1337/api/events?populate[course][filters][subject][$eq]=${courseName}`, config)
@@ -58,14 +60,7 @@ const Showinfo = () => {
       })
       .catch((error) => setError(error));
 
-    if (userRole !== 'student') {
-      // Remove JWT Token from Local Storage
-      window.localStorage.removeItem("jwtToken");
-      // Clear Authorization Header in Axios Defaults
-      axios.defaults.headers.common.Authorization = "";
-      // Navigate to the "/" path (adjust this if using a different routing library)
-      navigate("/");
-    }
+    setIsspin(false)
   }, []);
 
   if (error) {
@@ -83,14 +78,14 @@ const Showinfo = () => {
   }
 
   return (
-    <div>
+    <Spin spinning={isspin}>
       <nav className="navbar navbar-light" style={{display: "flex", justifyContent: "space-between", backgroundColor: "#80BCBD", height: "90px"}}>
         <div style={{display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center" , color: "white"}}>
           <a className="navbar-brand" style={{ backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} class="d-inline-block align-top" alt="" />
           </a>
           <a style={{marginRight: "20px"}}>
-            <h4>ระบบประกาศคะแนน</h4>
+            <h4>ระบบประกาศคะแนน ({dataname})</h4>
           </a>
           <a style={{marginRight: "20px"}}>
             <h4>รายวิชา</h4>
@@ -99,10 +94,14 @@ const Showinfo = () => {
             <h4>คะแนน</h4>
           </a>
         </div>
-        <div style={{marginRight: "30px", fontSize: "20px"}}>
-          <button className="button" onClick={handleGoBack} style={{ color: "white" }}>Back</button>
+        <div style={{marginRight: "30px", fontSize: "20px", display: "flex", alignItems: "center"}}>
+          <button className="button" onClick={handleGoBack} style={{ backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>Back</button>
         </div>
       </nav>
+
+      <Card style={{ margin: '20px' }}>
+        <FormControl onChange={(e) => setSearch(e.target.value)} placeholder="ค้นหาคะแนนที่ต้องการ" />
+      </Card>
 
       <div className="cards-container">
         {data.length === 0 ? (
@@ -115,7 +114,11 @@ const Showinfo = () => {
             <h1>ไม่มีข้อมูล</h1>
           </Card>
         ) : (
-          data.map(({ id, attributes }) => (
+          data.filter(({ id, attributes }) => {
+            return search.toLowerCase() === ''
+                ? attributes
+                : attributes.name.toLowerCase().includes(search);
+        }).map(({ id, attributes }) => (
             <Link
               className="no-underline"
               onClick={() => {
@@ -169,7 +172,7 @@ const Showinfo = () => {
           describ={des}
         />
       </div>
-    </div>
+    </Spin>
   );
 };
 

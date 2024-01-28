@@ -13,6 +13,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState();
     const [submitEnabled, setSubmitEnabled] = useState(true);
     const { setRole } = useAuth();
+    const { setAdCouse } = useAuth();
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -59,11 +60,14 @@ const LoginForm = () => {
                     navigate('/student');
                 }
                 if (result.data.role.name === 'stuff') {
+                    const your = await axios.get('http://localhost:1337/api/users/me?populate=course', config)
+                    setAdCouse(your.data.course.subject)
+                    //console.log(your.data.course.subject)     
                     navigate('/stuff');
                 }
             }
 
-            console.log(result)
+            //console.log(result)
 
         } catch (e) {
             console.log(e)

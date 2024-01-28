@@ -10,6 +10,18 @@ export const AuthProvider = ({ children }) => {
     return storedRole || null;
   });
 
+  const [yourcourse, setYourcourse] = useState(() => {
+    const admin = localStorage.getItem('admincouse');
+    return admin || null;
+  })
+
+  
+  const setAdCouse = (couse) => {
+    setYourcourse(couse)
+
+    localStorage.setItem('admincouse', couse)
+  }
+
   const setRole = (role) => {
     setUserRole(role);
     // เมื่อมีการเปลี่ยนแปลง userRole, บันทึกลง Local Storage
@@ -25,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ userRole, setRole }}>
+    <AuthContext.Provider value={{ userRole, setRole, yourcourse, setAdCouse}}>
       {children}
     </AuthContext.Provider>
   );

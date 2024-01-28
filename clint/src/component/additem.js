@@ -23,6 +23,7 @@ const AddEventForm = () => {
     const [search, setSearch] = useState('')
 
     const { userRole } = useAuth();
+    const { yourcourse } = useAuth();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
@@ -47,7 +48,7 @@ const AddEventForm = () => {
             .catch((error) => setError(error));
 
         axios.get("http://localhost:1337/api/users/me?populate=course", config)
-            .then(({ data }) => setTest([data.course]))
+            .then(({ data }) => (setTest(data.course)))
             .catch((error) => setError(error));
 
         axios.get("http://localhost:1337/api/users/me?populate[course][populate]=events", config)
@@ -62,18 +63,18 @@ const AddEventForm = () => {
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        const newEventData = {
-            name: eventName,
-            datetime: eventDateTime,
-            course: eventcouse,
-            description: eventdescribtion
-        };
-
+        setEventcouse(test.id)
+        
         try {
+            const newEventData = {
+                name: eventName,
+                datetime: eventDateTime,
+                course: test.id,
+                description: eventdescribtion
+            };
+
             const response = await axios.post('http://localhost:1337/api/events', { data: newEventData }, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
@@ -86,6 +87,8 @@ const AddEventForm = () => {
             setEventcouse('');
             setEventDateTime('');
             setEventDescribtion('');
+
+            window.location.reload()
 
         } catch (error) {
             console.error('Error adding event:', error);
@@ -129,7 +132,8 @@ const AddEventForm = () => {
                         <h4>เพิ่มคะแนน</h4>
                     </a>
                 </div>
-                <div style={{ marginRight: "30px", fontSize: "20px" }}>
+                <div style={{ marginRight: "30px", fontSize: "20px" , display: "flex", alignItems: "center"}}>
+                    <h4 style={{color: "white"}}>อาจารย์ประจำวิชา {yourcourse}</h4>
                     <button className="button" onClick={handleGoBack}
                         style={{ backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
                         Back
@@ -148,11 +152,8 @@ const AddEventForm = () => {
 
                     <Form.Group style={{ marginRight: "15px" }}>
                         <Form.Label>เลือกวิชา</Form.Label>
-                        <Form.Select onChange={choose} style={{ width: '250px' }}>
-                            {test.map((item) => (
-                                <option key={item.id} value={item.id}>{item.subject}</option>
-                            ))}
-                        </Form.Select>
+                        <Form.Control type="text" placeholder="เพิ่มอีเว้น" value={test.subject}
+                            style={{ width: '250px' }} disabled/>
                     </Form.Group>
 
                     <FormGroup style={{ marginRight: "15px" }}>

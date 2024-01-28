@@ -18,6 +18,7 @@ const UploadFile = () => {
   const [eventcouse, setEventcouse] = useState('');
 
   const { userRole } = useAuth();
+  const { yourcourse } = useAuth();
 
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
@@ -188,7 +189,8 @@ const UploadFile = () => {
             <h4>เพิ่มคะแนน</h4>
           </a>
         </div>
-        <div style={{ marginRight: "30px", fontSize: "20px" }}>
+        <div style={{ marginRight: "30px", fontSize: "20px", display: "flex", alignItems: "center" }}>
+          <h4 style={{color: "white"}}>อาจารย์ประจำวิชา {yourcourse}</h4>
           <button onClick={handleGoBack} className='button'
             style={{ backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
             Back
@@ -210,7 +212,7 @@ const UploadFile = () => {
           </Form.Group>
 
           <Form.Group controlId="formFile" style={{ width: "400px" }}>
-            <Form.Label>Default file input example</Form.Label>
+            <Form.Label>เพิ่มไฟล์</Form.Label>
             <Form.Control type="file" onChange={handleFileChange} disabled={!eventcouse} />
           </Form.Group>
 
