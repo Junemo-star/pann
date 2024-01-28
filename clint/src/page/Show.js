@@ -30,6 +30,16 @@ const Showinfo = () => {
   //////////////////////////////////////////////////////
   useEffect(() => {
 
+    
+    if (userRole !== 'student') {
+      // Remove JWT Token from Local Storage
+      window.localStorage.removeItem("jwtToken");
+      // Clear Authorization Header in Axios Defaults
+      axios.defaults.headers.common.Authorization = "";
+      // Navigate to the "/" path (adjust this if using a different routing library)
+      navigate("/");
+    }
+
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
       headers: {

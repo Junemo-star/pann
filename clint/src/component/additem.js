@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, CardBody, Form, FormGroup, Modal, Button } from "react-bootstrap";
+import { Card, Form, FormGroup, FormControl, Button } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import StaticExample from './editpage';
 import Deleteevent from './deletepage';
@@ -19,6 +19,8 @@ const AddEventForm = () => {
     const [data, setData] = useState('');
     const [modal, setModal] = useState(false)
     const [test, setTest] = useState([])
+
+    const [search, setSearch] = useState('')
 
     const { userRole } = useAuth();
 
@@ -47,7 +49,7 @@ const AddEventForm = () => {
         axios.get("http://localhost:1337/api/users/me?populate=course", config)
             .then(({ data }) => setTest([data.course]))
             .catch((error) => setError(error));
-        
+
         axios.get("http://localhost:1337/api/users/me?populate[course][populate]=events", config)
             .then(({ data }) => setDatacouse(data.course.events))
             .catch((error) => setError(error))
@@ -104,17 +106,14 @@ const AddEventForm = () => {
     };
 
     const edit = () => {
-        console.log(modal)
         setModal(true)
     }
 
     return (
         <div>
-            {console.log(datacouse)}
-            {console.log(data)}
-            <nav className="navbar navbar-light " style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#80BCBD", height: "90px"}}>
-                <div style={{ display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center" ,color: "white"}}>
-                    <a className="navbar-brand" style={{backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px"}}>
+            <nav className="navbar navbar-light " style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#80BCBD", height: "90px" }}>
+                <div style={{ display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center", color: "white" }}>
+                    <a className="navbar-brand" style={{ backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
                         <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} className="d-inline-block align-top" alt="" />
                     </a>
                     <a style={{ marginRight: "20px" }}>
@@ -131,8 +130,8 @@ const AddEventForm = () => {
                     </a>
                 </div>
                 <div style={{ marginRight: "30px", fontSize: "20px" }}>
-                    <button className="button" onClick={handleGoBack} 
-                        style={{backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
+                    <button className="button" onClick={handleGoBack}
+                        style={{ backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
                         Back
                     </button>
                 </div>
@@ -169,7 +168,7 @@ const AddEventForm = () => {
                     </FormGroup>
 
                     <div>
-                        <Button variant="success" type="submit">Add Event</Button>
+                        <Button style={{ backgroundColor: "#365486" }} type="submit">Add Event</Button>
                     </div>
                 </Form>
             </Card>
@@ -181,31 +180,40 @@ const AddEventForm = () => {
                 justifyContent: "space-between"
             }}>
                 <h2 >Event</h2>
-                <Button variant="success" onClick={() => upload()}>เพิ่มคะแนน</Button>
+                <Button style={{ backgroundColor: "#365486" }} onClick={() => upload()}>เพิ่มคะแนน</Button>
             </div>
 
-            {datacouse && datacouse.map((item) => (
-                <Card key={item.id} style={{ margin: '20px' }} className='ol-md-4 mb-4'>
-                    <Card.Body>
-                        <Card.Title style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" }}>
-                            <div>
-                                <h3>{item.name}</h3><br />
-                                {new Date(item.datetime).toLocaleString()}
-                            </div>
+            <Card style={{ margin: '20px' }}>
+                <FormControl onChange={(e) => setSearch(e.target.value)} placeholder="ค้นหาชื่อที่ต้องการ" />
+            </Card>
 
-                            <div style={{ display: 'flex', alignItems: "center" }}>
-                                <div style={{ marginRight: '10px' }}>
-                                    <Deleteevent id={item.id} />
-                                </div>
+            {datacouse && datacouse.filter((item) => {
+                return search.toLowerCase() === ''
+                    ? item
+                    : item.name.toLowerCase().includes(search);
+            }).
+                map((item) => (
+                    <Card key={item.id} style={{ margin: '20px' }} className='ol-md-4 mb-4'>
+                        <Card.Body>
+                            <Card.Title style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" }}>
                                 <div>
-                                    <StaticExample id={item.id} />
+                                    <h3>{item.name}</h3><br />
+                                    {new Date(item.datetime).toLocaleString()}
                                 </div>
-                            </div>
 
-                        </Card.Title>
-                    </Card.Body>
-                </Card>
-            ))}
+                                <div style={{ display: 'flex', alignItems: "center" }}>
+                                    <div style={{ marginRight: '10px' }}>
+                                        <StaticExample id={item.id} />
+                                    </div>
+                                    <div>
+                                        <Deleteevent id={item.id} />
+                                    </div>
+                                </div>
+
+                            </Card.Title>
+                        </Card.Body>
+                    </Card>
+                ))}
 
         </div>
     );

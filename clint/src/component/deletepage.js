@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import { Form, FormGroup, Modal } from "react-bootstrap";
+import { Modal, Image } from "react-bootstrap";
 
 function Deleteevent({ id }) {
     const [modal, setModal] = useState(false);
@@ -25,7 +25,9 @@ function Deleteevent({ id }) {
 
     return (
         <div>
-            <Button variant="danger" onClick={() => setModal(true)}>ลบ</Button>
+            <Button variant="danger" onClick={() => setModal(true)} style={{borderRadius: "100px"}}>
+                <Image src={"bin.png"} style={{width: "30px", height: "30px"}}/>
+            </Button>
 
             <Modal show={modal} onHide={() => setModal(false)}>
                 <Modal.Header closeButton>

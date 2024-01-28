@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import { Form, FormGroup, Modal} from "react-bootstrap";
+import { Form, FormGroup, Modal, Image} from "react-bootstrap";
 
 function StaticExample({ id }) {
     const [modal, setModal] = useState(false);
@@ -52,7 +52,9 @@ function StaticExample({ id }) {
 
     return (
         <div>
-            <Button variant="warning" onClick={() => setModal(true)}>แก้ไข</Button>
+            <Button onClick={() => setModal(true)} style={{borderRadius: "100px", backgroundColor: "#365486"}}>
+                <Image src={"whitegear.png"} style={{width: "30px", height: "30px"}}/>
+            </Button>
 
             <Modal show={modal} onHide={() => setModal(false)}>
                 <Modal.Header closeButton>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+
 import axios from 'axios';
 import * as XLSX from 'xlsx';
+
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardBody, Form, FormGroup, Button } from "react-bootstrap";
 import { useAuth } from './AuthContext';
@@ -86,7 +88,7 @@ const UploadFile = () => {
       }
 
       for (const excelRow of excelData) {
-        const studentId = excelRow[2];
+        const studentId = excelRow[0];
 
         const matchedUser = filteredEmails.find(
           (item) => item.email.slice(0, 3) === studentId.toString()
@@ -98,8 +100,8 @@ const UploadFile = () => {
           const response = await axios.post('http://localhost:1337/api/entries',
             {
               data: {
-                result: `${excelRow[0]}`,   //คะแนน
-                comment: `${excelRow[1]}`,   //คอมเม้น
+                result: `${excelRow[1]}`,   //คะแนน
+                comment: `${excelRow[2]}`,   //คอมเม้น
                 owner: parseInt(userId),     //เลขประจำตัวนักศึกษา (3 ตัว)
                 event: eventcouse,
               },
@@ -143,7 +145,7 @@ const UploadFile = () => {
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
       },
     })
-      .then((response) => {setDatacouse(response.data.course.events)})
+      .then((response) => { setDatacouse(response.data.course.events) })
       .catch((error) => setError(error));
 
   }, [postSuccess]);
@@ -179,7 +181,7 @@ const UploadFile = () => {
           <a style={{ marginRight: "20px" }}>
             <h4>ดูคะแนน</h4>
           </a>
-          <a style={{ marginRight: "20px"}}>
+          <a style={{ marginRight: "20px" }}>
             <h4>เพิ่มอีเว้น</h4>
           </a>
           <a style={{ marginRight: "20px", color: "black" }}>
@@ -187,9 +189,9 @@ const UploadFile = () => {
           </a>
         </div>
         <div style={{ marginRight: "30px", fontSize: "20px" }}>
-          <button onClick={handleGoBack} className='button' 
-            style={{backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
-              Back
+          <button onClick={handleGoBack} className='button'
+            style={{ backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
+            Back
           </button>
         </div>
       </nav>
@@ -214,10 +216,14 @@ const UploadFile = () => {
 
         </Form>
 
-        <Button variant="success" onClick={postToStrapi} disabled={!excelData} style={{ width: "400px", margin: "20px" }}>
+        <Button variant="success" onClick={postToStrapi} disabled={!excelData} style={{ width: "400px", margin: "20px", backgroundColor: "#365486" }}>
           ยืนยัน
         </Button>
       </Card >
+
+      <Card style={{ margin: '20px', display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <img src="up.png" style={{width: "auto", height: "450px"}}/>
+      </Card>
     </div>
   );
 };

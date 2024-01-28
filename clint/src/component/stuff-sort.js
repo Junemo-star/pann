@@ -22,7 +22,6 @@ function StuffpageSort() {
   const [search, setSearch] = useState('')
 
   const [username, setUsername] = useState([])
-  const [check, setCheck] = useState([])
 
   const [isspin, setIsspin] = useState(true)
   const { userRole } = useAuth();
@@ -86,7 +85,7 @@ function StuffpageSort() {
 
   const showpointstudent = () => {
     setShowyet(true)
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${selectedValue}&populate[owner]=*&populate[event][filters][name]=${selectedEvent}`, {
+    axios.get(`http://localhost:1337/api/entries?populate[owner]=*&populate[event][filters][name]=${selectedEvent}`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
       }
@@ -196,8 +195,8 @@ function StuffpageSort() {
       </Card>
 
       <div className="backposition" style={{ margin: '20px' }}>
-        <Button variant="success" onClick={() => add()}>เพิ่มข้อมูล</Button>
-        <Button variant="success" onClick={() => showpointstudent()} style={{ width: '3cm' }}>View</Button>
+        <Button onClick={() => showpointstudent()} style={{ width: '3cm', backgroundColor: "#365486" }}>View</Button>
+        <Button style={{backgroundColor: "#365486"}} onClick={() => add()}>เพิ่มข้อมูล</Button>
       </div>
 
       <div>
