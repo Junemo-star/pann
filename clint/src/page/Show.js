@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { Card, FormControl, Modal, Button} from 'react-bootstrap'
+import { Card, FormControl, Modal, Button } from 'react-bootstrap'
 import '../css/style.css'
 import { useAuth } from "../component/AuthContext";
 import { Spin } from 'antd';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Showinfo = () => {
   const navigate = useNavigate()
@@ -23,45 +24,52 @@ const Showinfo = () => {
   const [dataname, setDataname] = useState([])
   const [isspin, setIsspin] = useState(true)
 
+  const [see, setSee] = useState([])
+
   const handleGoBack = () => {
     navigate('/student');
   };
 
   //////////////////////////////////////////////////////
   useEffect(() => {
-
-    if (userRole !== 'student') {
-      // Remove JWT Token from Local Storage
-      window.localStorage.removeItem("jwtToken");
-      // Clear Authorization Header in Axios Defaults
-      axios.defaults.headers.common.Authorization = "";
-      // Navigate to the "/" path (adjust this if using a different routing library)
-      navigate("/");
-    }
-
-    //เก็บข้อมูล jwt ที่ได้จากการ login
-    const config = {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
-        // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
-      },
-    };
-    axios.get("http://localhost:1337/api/users/me", config)
-    .then(({ data }) => setDataname(data.name))
-    .catch((error) => console.log(error));
-
-    //เรียกข้อมูล
-    axios.get(`http://localhost:1337/api/events?populate[course][filters][subject][$eq]=${courseName}`, config)
-      .then(({ data }) => {
-        const filteredData = data.data.filter(item =>
+    const fetchData = async () => {
+      try {
+        if (userRole !== 'student') {
+          // Remove JWT Token from Local Storage
+          window.localStorage.removeItem("jwtToken");
+          // Clear Authorization Header in Axios Defaults
+          axios.defaults.headers.common.Authorization = "";
+          // Navigate to the "/" path (adjust this if using a different routing library)
+          navigate("/");
+        }
+      
+        //เก็บข้อมูล jwt ที่ได้จากการ login
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+            // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
+          },
+        };
+      
+        const userData = await axios.get("http://localhost:1337/api/users/me", config);
+        setDataname(userData.data);
+      
+        //เรียกข้อมูล
+        const eventData = await axios.get(`http://localhost:1337/api/events?populate[course][filters][subject][$eq]=${
+          courseName}&populate[entries][populate][owner][filters][username][$eq]=223`, config);
+        const filteredData = eventData.data.data.filter(item =>
           item.attributes.course.data !== null
-        )
-        setData(filteredData)
-      })
-      .catch((error) => setError(error));
+        );
+        setData(filteredData);
+      
+        setIsspin(false);
+      } catch (error) {
+        setError(error);
+      }
+    };
 
-    setIsspin(false)
-  }, []);
+    fetchData();
+  }, [userRole, navigate, courseName]);
 
   if (error) {
     return <div>An error occured: {error.message}</div>;
@@ -77,24 +85,39 @@ const Showinfo = () => {
     }
   }
 
+  const Check = (id) => {
+    const checked = data.find(item => item.id === id)
+    //return console.log(checked)
+    if (checked.attributes.entries.data.length === 0){
+      return null
+    }else {
+      const see = checked.attributes.entries.data.find(item => item.attributes.owner.data !== null)
+      if (see.attributes.seedata === null){
+        return <span class="badge badge-secondary" style={{color: "green"}}>New</span>
+      }else{
+        return null
+      }
+    }
+  }
+
   return (
     <Spin spinning={isspin}>
-      <nav className="navbar navbar-light" style={{display: "flex", justifyContent: "space-between", backgroundColor: "#80BCBD", height: "90px"}}>
-        <div style={{display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center" , color: "white"}}>
+      <nav className="navbar navbar-light" style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#80BCBD", height: "90px" }}>
+        <div style={{ display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center", color: "white" }}>
           <a className="navbar-brand" style={{ backgroundColor: "white", width: "160px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} class="d-inline-block align-top" alt="" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/PSU_CoC_ENG.png" width="120" height="30" style={{ marginLeft: "20px" }} className="d-inline-block align-top" alt="" />
           </a>
-          <a style={{marginRight: "20px"}}>
-            <h4>ระบบประกาศคะแนน ({dataname})</h4>
+          <a style={{ marginRight: "20px" }}>
+            <h4>ระบบประกาศคะแนน ({data.name})</h4>
           </a>
-          <a style={{marginRight: "20px"}}>
+          <a style={{ marginRight: "20px" }}>
             <h4>รายวิชา</h4>
           </a>
-          <a style={{color: "black"}}>
+          <a style={{ color: "black" }}>
             <h4>คะแนน</h4>
           </a>
         </div>
-        <div style={{marginRight: "30px", fontSize: "20px", display: "flex", alignItems: "center"}}>
+        <div style={{ marginRight: "30px", fontSize: "20px", display: "flex", alignItems: "center" }}>
           <button className="button" onClick={handleGoBack} style={{ backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>Back</button>
         </div>
       </nav>
@@ -116,9 +139,9 @@ const Showinfo = () => {
         ) : (
           data.filter(({ id, attributes }) => {
             return search.toLowerCase() === ''
-                ? attributes
-                : attributes.name.toLowerCase().includes(search);
-        }).map(({ id, attributes }) => (
+              ? attributes
+              : attributes.name.toLowerCase().includes(search);
+          }).map(({ id, attributes }) => (
             <Link
               className="no-underline"
               onClick={() => {
@@ -145,7 +168,11 @@ const Showinfo = () => {
               >
                 <Card.Body>
                   <Card.Title>
-                    <div><h3>{attributes.name}</h3></div>
+                    <div>
+                      <h3>
+                        {attributes.name} {Check(id)}
+                      </h3>
+                    </div>
                     <div style={{ marginBottom: "8px" }}>{new Date(attributes.datetime).toLocaleString()}</div>
                     <div>
                       <h5>

@@ -60,9 +60,9 @@ const LoginForm = () => {
                     navigate('/student');
                 }
                 if (result.data.role.name === 'stuff') {
-                    const your = await axios.get('http://localhost:1337/api/users/me?populate=course', config)
-                    setAdCouse(your.data.course.subject)
-                    //console.log(your.data.course.subject)     
+                    const your = await axios.get('http://localhost:1337/api/users/me?populate=courses', config)
+                    console.log(your.data.courses)
+                    setAdCouse(your.data.course)
                     navigate('/stuff');
                 }
             }

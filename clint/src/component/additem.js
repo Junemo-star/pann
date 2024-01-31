@@ -14,7 +14,7 @@ const AddEventForm = () => {
     const [eventdescribtion, setEventDescribtion] = useState('')
     const [error, setError] = useState(null);
 
-    const [datacouse, setDatacouse] = useState([]);
+    const [datacouse, setDatacouse] = useState();
 
     const [data, setData] = useState('');
     const [modal, setModal] = useState(false)
@@ -47,12 +47,13 @@ const AddEventForm = () => {
             .then(({ data }) => setData(data.data))
             .catch((error) => setError(error));
 
-        axios.get("http://localhost:1337/api/users/me?populate=course", config)
-            .then(({ data }) => (setTest(data.course)))
+        axios.get("http://localhost:1337/api/users/me?populate=courses", config)
+            .then(({ data }) => (setTest(data.courses)))
             .catch((error) => setError(error));
 
-        axios.get("http://localhost:1337/api/users/me?populate[course][populate]=events", config)
-            .then(({ data }) => setDatacouse(data.course.events))
+        //แสดงอีเว้นตามวิชาที่มีทั้งหมด
+        axios.get("http://localhost:1337/api/users/me?populate[courses][populate][events]=*", config)
+            .then(({ data }) => setDatacouse(data.courses))
             .catch((error) => setError(error))
 
     }, []);  // ในที่นี้ให้เรียกในที่ render แรกเท่านั้น
@@ -65,13 +66,12 @@ const AddEventForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setEventcouse(test.id)
-        
+
         try {
             const newEventData = {
                 name: eventName,
                 datetime: eventDateTime,
-                course: test.id,
+                course: eventcouse,
                 description: eventdescribtion
             };
 
@@ -94,11 +94,6 @@ const AddEventForm = () => {
             console.error('Error adding event:', error);
         }
     };
-
-    const choose = (event) => {
-        const selectedCourseId = event.target.value;
-        setEventcouse(selectedCourseId);
-    }
 
     const upload = () => {
         navigate('/upload')
@@ -132,8 +127,7 @@ const AddEventForm = () => {
                         <h4>เพิ่มคะแนน</h4>
                     </a>
                 </div>
-                <div style={{ marginRight: "30px", fontSize: "20px" , display: "flex", alignItems: "center"}}>
-                    <h4 style={{color: "white"}}>อาจารย์ประจำวิชา {yourcourse}</h4>
+                <div style={{ marginRight: "30px", fontSize: "20px", display: "flex", alignItems: "center" }}>
                     <button className="button" onClick={handleGoBack}
                         style={{ backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
                         Back
@@ -150,10 +144,16 @@ const AddEventForm = () => {
                             onChange={(e) => setEventName(e.target.value)} style={{ width: '200px' }} />
                     </Form.Group>
 
+
                     <Form.Group style={{ marginRight: "15px" }}>
                         <Form.Label>เลือกวิชา</Form.Label>
-                        <Form.Control type="text" placeholder="เพิ่มอีเว้น" value={test.subject}
-                            style={{ width: '250px' }} disabled/>
+                        <Form.Select aria-label="Default select example" style={{ width: '200px', marginRight: '30px' }}
+                        onChange={(e) => setEventcouse(e.target.value)} >
+                        <option>เลือกวิชา</option>
+                        {test.map(({id , subject}) => (
+                            <option key={id} value={id}>{subject}</option>
+                        ))}
+                        </Form.Select>
                     </Form.Group>
 
                     <FormGroup style={{ marginRight: "15px" }}>
@@ -188,33 +188,32 @@ const AddEventForm = () => {
                 <FormControl onChange={(e) => setSearch(e.target.value)} placeholder="ค้นหาชื่อที่ต้องการ" />
             </Card>
 
-            {datacouse && datacouse.filter((item) => {
+            {datacouse && datacouse.map(({ events }) => (events.filter((item) => {
                 return search.toLowerCase() === ''
                     ? item
                     : item.name.toLowerCase().includes(search);
-            }).
-                map((item) => (
-                    <Card key={item.id} style={{ margin: '20px' }} className='ol-md-4 mb-4'>
-                        <Card.Body>
-                            <Card.Title style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" }}>
+            }).map((item) => (
+                <Card key={item.id} style={{ margin: '20px' }} className='ol-md-4 mb-4'>
+                    <Card.Body>
+                        <Card.Title style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" }}>
+                            <div>
+                                <h3>{item.name}</h3><br />
+                                {new Date(item.datetime).toLocaleString()}
+                            </div>
+
+                            <div style={{ display: 'flex', alignItems: "center" }}>
+                                <div style={{ marginRight: '10px' }}>
+                                    <StaticExample id={item.id} />
+                                </div>
                                 <div>
-                                    <h3>{item.name}</h3><br />
-                                    {new Date(item.datetime).toLocaleString()}
+                                    <Deleteevent id={item.id} />
                                 </div>
+                            </div>
 
-                                <div style={{ display: 'flex', alignItems: "center" }}>
-                                    <div style={{ marginRight: '10px' }}>
-                                        <StaticExample id={item.id} />
-                                    </div>
-                                    <div>
-                                        <Deleteevent id={item.id} />
-                                    </div>
-                                </div>
-
-                            </Card.Title>
-                        </Card.Body>
-                    </Card>
-                ))}
+                        </Card.Title>
+                    </Card.Body>
+                </Card>
+            ))))}
 
         </div>
     );

@@ -190,7 +190,6 @@ const UploadFile = () => {
           </a>
         </div>
         <div style={{ marginRight: "30px", fontSize: "20px", display: "flex", alignItems: "center" }}>
-          <h4 style={{color: "white"}}>อาจารย์ประจำวิชา {yourcourse}</h4>
           <button onClick={handleGoBack} className='button'
             style={{ backgroundColor: "white", width: "100px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px" }}>
             Back

@@ -74,8 +74,8 @@ function StaticExample({ id }) {
                             />
                         </FormGroup>
 
-                        <FormGroup>
-                            <Form.Label>เวลา(หากต้องการเวลาเดิม ไม่ต้องเลือก)</Form.Label>
+                        <FormGroup style={{marginTop: "10px"}}>
+                            <Form.Label>เวลา (หากต้องการเวลาเดิม ไม่ต้องเลือก)</Form.Label>
                             <Form.Control
                                 type="datetime-local"
                                 value={eventDateTime}
@@ -84,7 +84,7 @@ function StaticExample({ id }) {
                             />
                         </FormGroup>
 
-                        <FormGroup>
+                        <FormGroup style={{marginTop: "10px"}}>
                             <Form.Label>รายละเอียด</Form.Label>
                             <Form.Control
                                 type="text"

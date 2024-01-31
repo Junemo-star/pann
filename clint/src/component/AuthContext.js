@@ -4,18 +4,20 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  
+  //เก็บโรลว่าเป็นโรลอะไร
   const [userRole, setUserRole] = useState(() => {
     // ใช้ callback ในการกำหนดค่าเริ่มต้นจาก Local Storage
     const storedRole = localStorage.getItem('userRole');
     return storedRole || null;
   });
 
+  //เก็บว่าเป็นเจ้าของคอสอะไร
   const [yourcourse, setYourcourse] = useState(() => {
     const admin = localStorage.getItem('admincouse');
     return admin || null;
   })
 
-  
   const setAdCouse = (couse) => {
     setYourcourse(couse)
 

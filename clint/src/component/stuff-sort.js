@@ -17,14 +17,12 @@ function StuffpageSort() {
   const [show, setShow] = useState()
   const [showyet, setShowyet] = useState(false)
   const [selectedSubject, setSelectedSubject] = useState('');
-  const [ShowAddModal, setShowAddModal] = useState(false);
   const [search, setSearch] = useState('')
 
   const [username, setUsername] = useState([])
 
   const [isspin, setIsspin] = useState(true)
   const { userRole } = useAuth();
-  const { yourcourse } = useAuth();
 
   useEffect(() => {
 
@@ -168,7 +166,6 @@ function StuffpageSort() {
           </a>
         </div>
         <div style={{ marginRight: "30px", fontSize: "20px", display: "flex", alignItems: "center"}}>
-          <h4 style={{color: "white"}}>อาจารย์ประจำวิชา {yourcourse}</h4>
           <button className="button" onClick={handleLogout} style={{ backgroundColor: "white", width: "120px", height: "40px", alignItems: "center", marginLeft: "20px", borderRadius: "10px"  }}>Logout</button>
         </div>
       </nav>
@@ -197,7 +194,7 @@ function StuffpageSort() {
 
       <div className="backposition" style={{ margin: '20px' }}>
         <Button onClick={() => showpointstudent()} style={{ width: '3cm', backgroundColor: "#365486" }}>View</Button>
-        <Button style={{backgroundColor: "#365486"}} onClick={() => add()}>เพิ่มข้อมูล</Button>
+        <Button style={{backgroundColor: "#365486"}} onClick={() => add()}>เพิ่มอีเว้น</Button>
       </div>
 
       <div>
@@ -219,7 +216,7 @@ function StuffpageSort() {
                   <tr>
                     <th>ชื่อ</th>
                     <th>คะแนน</th>
-                    <th>คอมเม้น</th>
+                    <th>คอมเมนต์</th>
                     <th>ดูคะแนนแล้วหรือยัง</th>
                     <th>ตั้งค่า</th>
                   </tr>
