@@ -14,11 +14,12 @@ const UploadFile = () => {
   const navigate = useNavigate();
 
   const [error, setError] = useState(null);
-  const [datacouse, setDatacouse] = useState([]);
-  const [eventcouse, setEventcouse] = useState('');
+  const [datacouse, setDatacouse] = useState([]); //ข้อมูลรายวิชา
+  const [eventcouse, setEventcouse] = useState(''); //ไอดีวิชาที่เลือก
+  const [event, setEvent] = useState([]); //อีเว้นที่ฟิลเตอด้วย id วิชา
+  const [numevent, setNumevent] = useState(''); //อีเว้นที่ฟิลเตอด้วย id วิชา
 
   const { userRole } = useAuth();
-  const { yourcourse } = useAuth();
 
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
@@ -62,14 +63,13 @@ const UploadFile = () => {
       }));
       setStdid(filteredstdid);
 
-      const entriesInEvent = await axios.get(`http://localhost:1337/api/events/${eventcouse}?populate=entries`, {
+      //เรียกข้อมูลคะแนนทั้งหมด
+      const entriesInEvent = await axios.get(`http://localhost:1337/api/events/${numevent}?populate=entries`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
         },
       });
-
       console.log(entriesInEvent);
-
       // ถ้ามี entries ในอีเว้นที่ถูกเลือก
       if (entriesInEvent.data.data.attributes.entries.data.length > 0) {
         const confirmDelete = window.confirm('อีเว้นนี้มีข้อมูลคะแนนอยู่แล้ว คุณต้องการลบข้อมูลเดิมทั้งหมดหรือไม่?');
@@ -104,7 +104,7 @@ const UploadFile = () => {
                 result: `${excelRow[1]}`,   //คะแนน
                 comment: `${excelRow[2]}`,   //คอมเม้น
                 owner: parseInt(userId),     //เลขประจำตัวนักศึกษา (3 ตัว)
-                event: eventcouse,
+                event: numevent,
               },
             },
             {
@@ -141,15 +141,29 @@ const UploadFile = () => {
       //window.location.reload();
     }
 
-    axios.get("http://localhost:1337/api/users/me?populate[course][populate]=events", {
+    //เรียกวิชาต่างๆ
+    axios.get("http://localhost:1337/api/users/me?populate[courses][populate]=events", {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
       },
     })
-      .then((response) => { setDatacouse(response.data.course.events) })
+      .then((response) => {setDatacouse(response.data.courses) })
       .catch((error) => setError(error));
+    
+    if (eventcouse !== '') {
+      axios.get(`http://localhost:1337/api/events?populate[course][filters][id][$eq]=${eventcouse}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+          },
+        }).then((response) => {
+          const filteredData = response.data.data.filter(item => 
+            item.attributes.course.data !== null)
+          setEvent(filteredData)
+        })
+        .catch((error) => console.log(error))
+    }
 
-  }, [postSuccess]);
+  }, [postSuccess, eventcouse]);
 
   if (error) {
     // Print errors if any
@@ -157,9 +171,10 @@ const UploadFile = () => {
   }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
-  const choose = async (event) => {
+  const choose = (event) => {
     const selectedCourseId = event.target.value;
     setEventcouse(selectedCourseId);
+    console.log(eventcouse)
 
   }
 
@@ -169,7 +184,6 @@ const UploadFile = () => {
 
   return (
     <div>
-      {console.log(datacouse)}
 
       <nav className="navbar navbar-light " style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#80BCBD", height: "90px" }}>
         <div style={{ display: "flex", alignItems: "center", marginRight: "20px", justifyContent: "center", color: "white" }}>
@@ -201,15 +215,26 @@ const UploadFile = () => {
         <Form style={{ margin: '20px', display: "flex" }}>
 
           <Form.Group style={{ width: "400px" }}>
-            <Form.Label>เลือกอีเว้น</Form.Label>
-            <Form.Select onChange={choose} style={{ width: '250px' }}>
+            <Form.Label>เลือกวิชา</Form.Label>
+            <Form.Select onChange={(event) => setEventcouse(event.target.value)} style={{ width: '250px' }}>
               <option>......</option>
               {datacouse && datacouse?.map((course) => (
-                <option key={course.id} value={course.id}>{course.name}</option>
+                <option key={course.id} value={course.id}>{course.subject}</option>
               ))}
             </Form.Select>
           </Form.Group>
 
+          <Form.Group style={{ width: "400px" }}>
+            <Form.Label>เลือกอีเว้น</Form.Label>
+            <Form.Select onChange={(e) => setNumevent(e.target.value)} style={{ width: '250px' }}>
+              <option>......</option>
+              {event && event?.map(({id, attributes}) => (
+                <option key={id} value={id}>{attributes.name}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          {console.log(numevent)}
           <Form.Group controlId="formFile" style={{ width: "400px" }}>
             <Form.Label>เพิ่มไฟล์</Form.Label>
             <Form.Control type="file" onChange={handleFileChange} disabled={!eventcouse} />
