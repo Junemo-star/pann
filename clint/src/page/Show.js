@@ -6,6 +6,7 @@ import '../css/style.css'
 import { useAuth } from "../component/AuthContext";
 import { Spin } from 'antd';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Footer from '../component/footer';
 
 const Showinfo = () => {
   const navigate = useNavigate()
@@ -92,8 +93,12 @@ const Showinfo = () => {
       return null
     }else {
       const see = checked.attributes.entries.data.find(item => item.attributes.owner.data !== null)
-      if (see.attributes.seedata === null){
-        return <span class="badge badge-secondary" style={{color: "green"}}>New</span>
+      if (see){
+        if (see.attributes.seedata === null){
+          return <span className="badge badge" style={{color: "green"}}>New</span>
+        }else{
+          return null
+        }
       }else{
         return null
       }
@@ -171,7 +176,7 @@ const Showinfo = () => {
                     <div>
                       <h3>
                         {attributes.name} {Check(id)}
-                      </h3>
+                      </h3> 
                     </div>
                     <div style={{ marginBottom: "8px" }}>{new Date(attributes.datetime).toLocaleString()}</div>
                     <div>

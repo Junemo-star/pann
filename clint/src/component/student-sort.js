@@ -6,6 +6,7 @@ import '../css/style.css'
 import { FormControl, Card } from "react-bootstrap";
 import { useAuth } from "./AuthContext";
 import { Spin } from 'antd';
+import Footer from "./footer";
 
 function StudentSort() {   //ชื่อฟังก์ชั่นควรเป็นตัวใหญ่
   const [error, setError] = useState(null);

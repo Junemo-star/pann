@@ -234,7 +234,6 @@ const UploadFile = () => {
             </Form.Select>
           </Form.Group>
 
-          {console.log(numevent)}
           <Form.Group controlId="formFile" style={{ width: "400px" }}>
             <Form.Label>เพิ่มไฟล์</Form.Label>
             <Form.Control type="file" onChange={handleFileChange} disabled={!eventcouse} />
