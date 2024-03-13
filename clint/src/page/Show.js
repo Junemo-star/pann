@@ -56,8 +56,7 @@ const Showinfo = () => {
         setDataname(userData.data);
       
         //เรียกข้อมูล
-        const eventData = await axios.get(`http://localhost:1337/api/events?populate[course][filters][subject][$eq]=${
-          courseName}&populate[entries][populate][owner][filters][username][$eq]=223`, config);
+        const eventData = await axios.get(`http://localhost:1337/api/events?populate[course][filters][subject][$eq]=${courseName}&populate[entries][populate][owner][filters][username][$eq]=223`, config);
         const filteredData = eventData.data.data.filter(item =>
           item.attributes.course.data !== null
         );
@@ -227,8 +226,7 @@ function MyVerticallyCenteredModal(props) {
       },
     };
 
-    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${
-      courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
+    axios.get(`http://localhost:1337/api/entries?populate[course][filters][subject][$eq]=${courseName}&populate[owner][filters][username]=${user}&populate[event][filters][name]=${entry}`, config)
       .then(({ data }) => {
         const filteredData = data.data.filter(item =>
           item.attributes.event.data !== null &&
